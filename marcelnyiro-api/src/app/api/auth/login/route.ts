@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import pool from '@/lib/db';
-import { comparePassword } from '@/lib/auth';
+import { comparePassword, generateJWT } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
@@ -38,14 +38,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Return user data (excluding password)
+    // Generate JWT token
+    const userSession = {
+      id: user.id,
+      name: user.name,
+      email: user.email
+    };
+    
+    const token = generateJWT(userSession);
+
+    // Return user data and JWT token (excluding password)
     return NextResponse.json({
       message: 'Login successful',
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email
-      }
+      user: userSession,
+      token: token
     }, { status: 200 });
 
   } catch (error) {

@@ -19,4 +19,4 @@ echo "1. Copy this project to your droplet: scp -r . user@your-droplet-ip:/var/w
 echo "2. SSH to droplet: ssh user@your-droplet-ip"
 echo "3. Install dependencies: cd /var/www/marci-api && npm install"
 echo "4. Start with PM2: pm2 start ecosystem.config.js"
-echo "5. Configure nginx to proxy to localhost:3001"
+echo "5. Configure nginx to proxy to localhost:3002"
