@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/db';
+import { verifyJWT } from '@/lib/auth';
+
+// Admin verification helper
+const isAdmin = (email: string): boolean => {
+  return email === 'business@marcelnyiro.com';
+};
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,18 +28,40 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Fetch courses from database
-    const coursesResult = await query(
-      `SELECT id, title, description, duration, thumbnail, category, level 
-       FROM courses 
-       ORDER BY id`
-    );
+    // Check if user is admin to determine if we should show draft courses
+    let isUserAdmin = false;
+    console.log('Auth header:', authHeader ? 'Present' : 'Missing');
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.substring(7);
+      console.log('Token present:', token ? 'Yes' : 'No');
+      const decoded = verifyJWT(token);
+      console.log('Decoded token:', decoded);
+      if (decoded && decoded.email === 'business@marcelnyiro.com') {
+        isUserAdmin = true;
+        console.log('User identified as admin');
+      } else {
+        console.log('User not admin. Email:', decoded?.email);
+      }
+    }
+    console.log('isUserAdmin:', isUserAdmin);
+
+    // Fetch courses from database - filter by status based on admin status
+    const coursesQuery = isUserAdmin 
+      ? `SELECT id, title, description, duration, thumbnail, category, level, status, course_type 
+         FROM courses 
+         ORDER BY id`
+      : `SELECT id, title, description, duration, thumbnail, category, level, status, course_type 
+         FROM courses 
+         WHERE status = 'active'
+         ORDER BY id`;
+    
+    const coursesResult = await query(coursesQuery);
 
     // For each course, fetch modules and user progress
     const courses = await Promise.all(coursesResult.map(async (course) => {
       // Fetch modules for this course
       const modulesResult = await query(
-        `SELECT id, title, duration, video_count as videos, order_index, episode_date, episode_time 
+        `SELECT id, title, duration, video_count as videos, order_index, episode_date, episode_time, video_url 
          FROM course_modules 
          WHERE course_id = $1 
          ORDER BY order_index`,
@@ -81,7 +109,8 @@ export async function GET(request: NextRequest) {
           completed: completed,
           locked: locked,
           episode_date: module.episode_date,
-          episode_time: module.episode_time
+          episode_time: module.episode_time,
+          videoUrl: module.video_url || null
         };
       });
 
@@ -95,7 +124,10 @@ export async function GET(request: NextRequest) {
       
       // Special handling for Weekly Check-ins courses
       if (course.category === 'weekly-checkins') {
-        courseId = `weekly-checkins-${course.level.toLowerCase()}`;
+        courseId = `weekly-checkins-${course.level.toLowerCase()}-${course.id}`;
+      } else {
+        // For other courses, append database ID to ensure uniqueness
+        courseId = `${courseId}-${course.id}`;
       }
 
       return {
@@ -108,73 +140,101 @@ export async function GET(request: NextRequest) {
         thumbnail: course.thumbnail,
         category: course.category,
         level: course.level,
+        status: course.status,
+        courseType: course.course_type,
         modules: modules
       };
     }));
 
-    // Fallback to static data if database is empty
-    if (courses.length === 0) {
-      const staticCourses = [
-      {
-        id: "ai-entrepreneurship",
-        title: "AI Entrepreneurship Masterclass",
-        description: "Learn how to build and scale AI-powered businesses from ideation to 73M HUF funding like Outfino.",
-        progress: 65,
-        duration: "8 hours",
-        lessons: 24,
-        thumbnail: "🤖",
-        category: "entrepreneurship",
-        level: "Intermediate",
-        modules: [
-          { id: 1, title: "AI Business Model Validation", videos: 4, duration: "90 min", completed: true, locked: false },
-          { id: 2, title: "Building AI-Powered MVPs", videos: 5, duration: "120 min", completed: true, locked: false },
-          { id: 3, title: "Fashion Tech & Industry Applications", videos: 4, duration: "100 min", completed: false, locked: false },
-          { id: 4, title: "Securing VC Investment (OUVC Case Study)", videos: 4, duration: "110 min", completed: false, locked: false },
-          { id: 5, title: "Scaling AI Products to 5K Users", videos: 4, duration: "95 min", completed: false, locked: true },
-          { id: 6, title: "Exit Strategies for AI Startups", videos: 4, duration: "85 min", completed: false, locked: true }
-        ]
-      },
-      {
-        id: "outfino-case-study",
-        title: "Building Outfino: From Idea to 73M HUF",
-        description: "Behind-the-scenes journey of building an AI fashion platform that secured Hungary's first university VC investment.",
-        progress: 30,
-        duration: "6 hours",
-        lessons: 16,
-        thumbnail: "👗",
-        category: "case-study",
-        level: "Advanced",
-        modules: [
-          { id: 1, title: "Pre-investment Preparation", videos: 4, duration: "75 min", completed: false, locked: false },
-          { id: 2, title: "STRT Incubation Process", videos: 4, duration: "80 min", completed: false, locked: false },
-          { id: 3, title: "OUVC Pitch & Negotiation", videos: 4, duration: "90 min", completed: false, locked: false },
-          { id: 4, title: "Scaling to 300+ Users & Beyond", videos: 4, duration: "85 min", completed: false, locked: false }
-        ]
-      },
-      {
-        id: "startup-scaling",
-        title: "Startup Scaling Strategies",
-        description: "Proven methods for growing from MVP to market leader, featuring Central-Eastern Europe expansion tactics.",
-        progress: 0,
-        duration: "5 hours",
-        lessons: 15,
-        thumbnail: "📈",
-        category: "business",
-        level: "Intermediate", 
-        modules: [
-          { id: 1, title: "Growth Hacking for Startups", videos: 3, duration: "60 min", completed: false, locked: false },
-          { id: 2, title: "B2B Partnership Strategies", videos: 4, duration: "80 min", completed: false, locked: true },
-          { id: 3, title: "Geographic Expansion Planning", videos: 4, duration: "75 min", completed: false, locked: true },
-          { id: 4, title: "Team Building & Culture", videos: 4, duration: "70 min", completed: false, locked: true }
-        ]
-      }
-      ];
-      return NextResponse.json(staticCourses);
-    }
 
     return NextResponse.json(courses);
   } catch (error) {
     console.error('Courses API error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
+export async function POST(request: NextRequest) {
+  try {
+    // Get the Authorization header
+    const authHeader = request.headers.get('authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json(
+        { error: 'Authorization header required' },
+        { status: 401 }
+      );
+    }
+
+    const token = authHeader.substring(7);
+    const decoded = verifyJWT(token);
+
+    if (!decoded) {
+      return NextResponse.json(
+        { error: 'Invalid or expired token' },
+        { status: 401 }
+      );
+    }
+
+    // Check if user is admin
+    if (!isAdmin(decoded.email)) {
+      return NextResponse.json(
+        { error: 'Admin access required' },
+        { status: 403 }
+      );
+    }
+
+    const courseData = await request.json();
+
+    // Insert new course into database with draft status by default
+    const courseResult = await query(
+      `INSERT INTO courses (title, description, duration, thumbnail, category, level, status, course_type) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8) 
+       RETURNING id`,
+      [
+        courseData.title,
+        courseData.description,
+        courseData.duration,
+        courseData.thumbnail,
+        courseData.category,
+        courseData.level,
+        'draft',
+        courseData.courseType || 'normal'
+      ]
+    );
+
+    const newCourseId = courseResult[0].id;
+
+    // Insert initial modules if provided
+    if (courseData.modules && courseData.modules.length > 0) {
+      for (let i = 0; i < courseData.modules.length; i++) {
+        const module = courseData.modules[i];
+        await query(
+          `INSERT INTO course_modules (course_id, title, duration, video_count, order_index, episode_date, episode_time) 
+           VALUES ($1, $2, $3, $4, $5, $6, $7)`,
+          [
+            newCourseId,
+            module.title,
+            module.duration,
+            module.videos || 1,
+            i + 1,
+            module.episode_date || null,
+            module.episode_time || null
+          ]
+        );
+      }
+    }
+
+    return NextResponse.json({
+      message: 'Course created successfully',
+      courseId: courseData.id,
+      databaseId: newCourseId
+    }, { status: 201 });
+
+  } catch (error) {
+    console.error('Course creation error:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
   }
 }
