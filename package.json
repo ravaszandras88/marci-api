@@ -1,0 +1,15 @@
+{
+  "name": "marci-brand-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n \"API,PORTFOLIO,LEARN\" -c \"yellow,blue,green\" \"npm run dev:api\" \"npm run dev:portfolio\" \"npm run dev:learn\"",
+    "dev:api": "cd marcelnyiro-api && npm run dev",
+    "dev:portfolio": "cd marcelnyiro-portfolio && npm run dev",
+    "dev:learn": "cd marcelnyiro-learn && npm run dev",
+    "install:all": "npm install && cd marcelnyiro-api && npm install && cd ../marcelnyiro-portfolio && npm install && cd ../marcelnyiro-learn && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}
