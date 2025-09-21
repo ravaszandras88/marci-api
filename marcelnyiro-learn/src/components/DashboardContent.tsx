@@ -106,12 +106,12 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-8 rounded-xl text-white">
-        <h1 className="text-3xl font-bold mb-2">
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 sm:p-6 md:p-8 rounded-xl text-white">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-2">
           <EditableField
             value={`Welcome back, ${user.name}!`}
             onChange={() => {}} // Static for now
-            className="text-3xl font-bold text-white"
+            className="text-xl sm:text-2xl md:text-3xl font-bold text-white"
             placeholder="Welcome message"
           />
         </h1>
@@ -123,7 +123,7 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
             placeholder="Subtitle"
           />
         </p>
-        <div className="flex items-center gap-6 text-sm">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 text-xs sm:text-sm">
           <div className="flex items-center gap-2">
             <Award className="h-4 w-4" />
             <span>
@@ -161,8 +161,8 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="p-2 bg-blue-900/20 rounded-lg">
               <BookOpen className="h-5 w-5 text-blue-400" />
@@ -177,10 +177,10 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
               placeholder="Stat Label"
             />
           </h3>
-          <p className="text-2xl font-bold text-white">{courses.length}</p>
+          <p className="text-xl sm:text-2xl font-bold text-white">{courses.length}</p>
         </div>
         
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="p-2 bg-green-900/20 rounded-lg">
               <Video className="h-5 w-5 text-green-400" />
@@ -195,10 +195,10 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
               placeholder="Stat Label"
             />
           </h3>
-          <p className="text-2xl font-bold text-white">{courses.reduce((acc, course) => acc + course.lessons, 0)}</p>
+          <p className="text-xl sm:text-2xl font-bold text-white">{courses.reduce((acc, course) => acc + course.lessons, 0)}</p>
         </div>
         
-        <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+        <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="p-2 bg-purple-900/20 rounded-lg">
               <Award className="h-5 w-5 text-purple-400" />
@@ -213,7 +213,7 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
               placeholder="Stat Label"
             />
           </h3>
-          <p className="text-2xl font-bold text-white">{Math.round(courses.reduce((acc, course) => acc + course.progress, 0) / courses.length)}%</p>
+          <p className="text-xl sm:text-2xl font-bold text-white">{Math.round(courses.reduce((acc, course) => acc + course.progress, 0) / courses.length)}%</p>
         </div>
 
       </div>
@@ -221,20 +221,20 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
       {/* Courses Grid */}
       <div>
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-white">
+          <h2 className="text-xl sm:text-2xl font-bold text-white">
             <EditableField
               value="Your Courses"
               onChange={() => {}} // Static section title
-              className="text-2xl font-bold text-white"
+              className="text-xl sm:text-2xl font-bold text-white"
               placeholder="Section Title"
             />
           </h2>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-4 sm:gap-6">
           {courses.map((course) => (
-            <div key={course.id} className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-gray-700 transition-colors">
-              <div className="flex gap-4 mb-4">
+            <div key={course.id} className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6 hover:border-gray-700 transition-colors">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-4">
                 <div className="text-3xl">
                   <EditableField
                     value={course.thumbnail}
@@ -243,11 +243,11 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
                   />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-bold text-white mb-2">
+                  <h3 className="text-base sm:text-lg font-bold text-white mb-2">
                     <EditableField
                       value={course.title}
                       onChange={(value) => updateCourseField(course.id, 'title', value)}
-                      className="text-lg font-bold text-white"
+                      className="text-base sm:text-lg font-bold text-white"
                       placeholder="Course Title"
                     />
                   </h3>
@@ -260,7 +260,7 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
                       placeholder="Course description..."
                     />
                   </p>
-                  <div className="flex items-center gap-4 text-sm text-gray-400">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-400">
                     <span className="flex items-center gap-1">
                       <Video className="h-4 w-4" />
                       <EditableField
@@ -305,7 +305,7 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
               
               {/* Admin Status Toggle */}
               {isAdmin && (
-                <div className="mb-4 flex items-center justify-between p-3 bg-gray-800 rounded-lg border border-gray-700">
+                <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3 bg-gray-800 rounded-lg border border-gray-700">
                   <div className="flex items-center gap-2">
                     <span className="text-sm text-gray-300">Status:</span>
                     <span className={`text-xs px-2 py-1 rounded-full font-medium ${

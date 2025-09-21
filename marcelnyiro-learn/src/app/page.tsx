@@ -58,6 +58,7 @@ const LearnedDashboard = ({ onUserLoad }: { onUserLoad?: (user: UserData | null)
   const [weeklyCheckinsExpanded, setWeeklyCheckinsExpanded] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [showCourseTypeDialog, setShowCourseTypeDialog] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   
   // Debug logging for dialog state
   useEffect(() => {
@@ -753,13 +754,13 @@ const LearnedDashboard = ({ onUserLoad }: { onUserLoad?: (user: UserData | null)
   // Show loading screen while checking authentication
   if (isLoading || !authChecked) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center px-4">
         <div className="text-center">
           <div className="mb-8">
-            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
-              <BookOpen className="w-10 h-10 text-white animate-pulse" />
+            <div className="w-16 sm:w-20 h-16 sm:h-20 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
+              <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-white animate-pulse" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">{user?.name || 'Marcel Nyirő Learning'}</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">{user?.name || 'Marcel Nyirő Learning'}</h1>
             <p className="text-gray-400 mb-8">Loading...</p>
           </div>
           <div className="flex justify-center">
@@ -773,13 +774,13 @@ const LearnedDashboard = ({ onUserLoad }: { onUserLoad?: (user: UserData | null)
   // Show access required only after auth check is complete and no user found
   if (!user) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center px-4">
         <div className="text-center">
           <div className="mb-8">
-            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
-              <BookOpen className="w-10 h-10 text-white" />
+            <div className="w-16 sm:w-20 h-16 sm:h-20 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
+              <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">Marcel Nyirő Learning</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Marcel Nyirő Learning</h1>
             <p className="text-gray-400 mb-8">Access Required</p>
           </div>
           <p className="text-gray-400 mb-6">Please sign in to access your courses and continue your AI entrepreneurship journey.</p>
@@ -800,13 +801,13 @@ const LearnedDashboard = ({ onUserLoad }: { onUserLoad?: (user: UserData | null)
       <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
           <div className="mb-8">
-            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center">
-              <BookOpen className="w-10 h-10 text-white" />
+            <div className="w-16 sm:w-20 h-16 sm:h-20 mx-auto mb-4 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center">
+              <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">Premium Access Required</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">Premium Access Required</h1>
             <p className="text-gray-400 mb-8">Welcome, {user.name}!</p>
           </div>
-          <p className="text-gray-400 mb-6">
+          <p className="text-sm sm:text-base text-gray-400 mb-6">
             You need to purchase the course to access the learning platform. 
             Get unlimited access to Marcel's AI entrepreneurship content for just 4000 HUF/month.
           </p>
@@ -897,8 +898,18 @@ const LearnedDashboard = ({ onUserLoad }: { onUserLoad?: (user: UserData | null)
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-black text-white">
-      <Sidebar
+    <div className="flex min-h-screen w-full bg-black text-white relative">
+      {/* Mobile Menu Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:sticky top-0 z-50 transition-transform duration-300 h-full lg:h-auto`}>
+        <Sidebar
         user={user}
         selected={selected}
         setSelected={setSelected}
@@ -916,16 +927,33 @@ const LearnedDashboard = ({ onUserLoad }: { onUserLoad?: (user: UserData | null)
         onDeleteCourse={handleDeleteCourse}
         onDeleteCategory={handleDeleteCategory}
         onUpdateCourseTitle={handleUpdateCourseTitle}
+        onClose={() => setSidebarOpen(false)}
       />
-      <div className="flex-1 bg-black p-6 overflow-auto">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+      </div>
+      
+      <div className="flex-1 bg-black p-4 sm:p-6 overflow-auto lg:ml-0">
+        {/* Mobile Header with Hamburger */}
+        <div className="flex lg:hidden items-center justify-between mb-6">
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="p-2 text-white hover:bg-gray-800 rounded-lg transition-colors"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          <h1 className="text-xl font-bold text-white">{getPageTitle()}</h1>
+          <div className="w-10" />
+        </div>
+        
+        {/* Desktop Header */}
+        <div className="hidden lg:flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white">
+            <h1 className="text-2xl sm:text-3xl font-bold text-white">
               <EditableField
                 value={getPageTitle()}
                 onChange={() => {}} // Static for now, can be made dynamic later
-                className="text-3xl font-bold text-white"
+                className="text-2xl sm:text-3xl font-bold text-white"
                 placeholder="Page Title"
               />
             </h1>

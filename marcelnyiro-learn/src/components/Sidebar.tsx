@@ -69,6 +69,7 @@ interface SidebarProps {
   onDeleteCourse: (courseId: string) => void;
   onDeleteCategory: (category: string) => void;
   onUpdateCourseTitle: (courseId: string, newTitle: string) => void;
+  onClose?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -88,7 +89,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onAddItem,
   onDeleteCourse,
   onDeleteCategory,
-  onUpdateCourseTitle
+  onUpdateCourseTitle,
+  onClose
 }) => {
   const sidebarOpen = true;
   const { isAdmin } = useAdmin();
@@ -176,10 +178,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <nav
-      className={`sticky top-0 h-screen shrink-0 border-r transition-all duration-300 ease-in-out ${
+      className={`h-screen shrink-0 border-r transition-all duration-300 ease-in-out ${
         sidebarOpen ? 'w-64' : 'w-16'
       } border-gray-800 bg-gray-900 p-2 shadow-sm`}
     >
+      {/* Mobile Close Button */}
+      <div className="flex lg:hidden justify-end mb-4">
+        <button
+          onClick={onClose}
+          className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      
       {/* Title Section with User Dropdown */}
       <div className={`border-b border-gray-800 transition-all duration-200 ${userDropdownOpen ? 'mb-0 pb-2' : 'mb-6 pb-4'}`}>
         <div className={`bg-gray-800 rounded-md border border-gray-700 overflow-hidden transition-all duration-200 ${userDropdownOpen ? 'shadow-lg' : ''}`}>
@@ -194,8 +208,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
             transition={{ duration: 0.3, ease: "easeInOut" }}
           >
           <div className="flex items-center gap-3">
-            <div className="grid size-10 shrink-0 place-content-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 shadow-sm">
-              <GraduationCap className="h-5 w-5 text-white" />
+            <div className="grid size-8 sm:size-10 shrink-0 place-content-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 shadow-sm">
+              <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
             </div>
             {sidebarOpen && (
               <div className={`transition-opacity duration-200 ${sidebarOpen ? 'opacity-100' : 'opacity-0'}`}>
@@ -271,7 +285,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </button>
               <button
                 onClick={() => {
-                  window.open('https://calendly.com/marcel-nyiro', '_blank');
+                  window.open('https://calendly.com/marcelnyiro', '_blank');
                   setUserDropdownOpen(false);
                 }}
                 className="flex items-center gap-3 w-full px-3 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-white transition-colors"
@@ -322,6 +336,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     if (item.onClick) item.onClick();
                   } else {
                     item.onClick();
+                    if (onClose && window.innerWidth < 1024) {
+                      onClose();
+                    }
                   }
                 }}
                 className={`relative flex h-11 w-full items-center rounded-md transition-all duration-200 cursor-pointer ${
@@ -384,6 +401,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
                                 }));
                               } else if (subItem.onClick) {
                                 subItem.onClick();
+                                if (onClose && window.innerWidth < 1024) {
+                                  onClose();
+                                }
                               }
                             }}
                           >

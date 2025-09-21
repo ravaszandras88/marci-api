@@ -48,11 +48,11 @@ export const CoursesOverviewContent: React.FC<{
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-2xl font-bold text-white mb-6">
+        <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">
           <EditableField
             value="All Courses"
             onChange={() => {}} // Static for now, can be made dynamic later
-            className="text-2xl font-bold text-white"
+            className="text-xl sm:text-2xl font-bold text-white"
             placeholder="Page Title"
           />
         </h2>
@@ -66,9 +66,9 @@ export const CoursesOverviewContent: React.FC<{
         </p>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
         {courses.map((course) => (
-          <div key={course.id} className="bg-gray-900 border border-gray-800 rounded-xl p-6 hover:border-gray-700 transition-colors">
+          <div key={course.id} className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6 hover:border-gray-700 transition-colors">
             <div className="flex items-center gap-3 mb-4">
               <div className="text-2xl">
                 <EditableField
@@ -78,11 +78,11 @@ export const CoursesOverviewContent: React.FC<{
                 />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-white">
+                <h3 className="text-base sm:text-lg font-bold text-white">
                   <EditableField
                     value={course.title}
                     onChange={(value) => updateCourseField(course.id, 'title', value)}
-                    className="text-lg font-bold text-white"
+                    className="text-base sm:text-lg font-bold text-white"
                     placeholder="Course Title"
                   />
                 </h3>
@@ -107,7 +107,7 @@ export const CoursesOverviewContent: React.FC<{
               />
             </p>
             
-            <div className="flex items-center gap-4 text-sm text-gray-400 mb-4">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-400 mb-4">
               <span className="flex items-center gap-1">
                 <Video className="h-4 w-4" />
                 <EditableField
@@ -165,11 +165,11 @@ export const ProgressContent: React.FC<{
 }> = ({ courses, setSelected }) => (
   <div className="space-y-8">
     <div>
-      <h2 className="text-2xl font-bold text-white mb-6">
+      <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">
         <EditableField
           value="My Progress"
           onChange={() => {}} // Static for now
-          className="text-2xl font-bold text-white"
+          className="text-xl sm:text-2xl font-bold text-white"
           placeholder="Page Title"
         />
       </h2>
@@ -184,8 +184,8 @@ export const ProgressContent: React.FC<{
     </div>
 
     {/* Overall Stats */}
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 mb-8">
+      <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="p-2 bg-blue-900/20 rounded-lg">
             <BookOpen className="h-5 w-5 text-blue-400" />
@@ -199,10 +199,10 @@ export const ProgressContent: React.FC<{
             placeholder="Stat Label"
           />
         </h3>
-        <p className="text-2xl font-bold text-white">{courses.filter(c => c.progress === 100).length}</p>
+        <p className="text-xl sm:text-2xl font-bold text-white">{courses.filter(c => c.progress === 100).length}</p>
       </div>
       
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="p-2 bg-green-900/20 rounded-lg">
             <CheckCircle className="h-5 w-5 text-green-400" />
@@ -216,12 +216,12 @@ export const ProgressContent: React.FC<{
             placeholder="Stat Label"
           />
         </h3>
-        <p className="text-2xl font-bold text-white">
+        <p className="text-xl sm:text-2xl font-bold text-white">
           {courses.reduce((acc, course) => acc + course.modules.filter(m => m.completed).length, 0)}
         </p>
       </div>
       
-      <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="p-2 bg-purple-900/20 rounded-lg">
             <Award className="h-5 w-5 text-purple-400" />
@@ -235,7 +235,7 @@ export const ProgressContent: React.FC<{
             placeholder="Stat Label"
           />
         </h3>
-        <p className="text-2xl font-bold text-white">{Math.round(courses.reduce((acc, course) => acc + course.progress, 0) / courses.length)}%</p>
+        <p className="text-xl sm:text-2xl font-bold text-white">{Math.round(courses.reduce((acc, course) => acc + course.progress, 0) / courses.length)}%</p>
       </div>
 
     </div>
@@ -416,11 +416,11 @@ export const BillingContent: React.FC<{ user: UserData }> = ({ user }) => {
   return (
   <div className="space-y-8">
     <div>
-      <h2 className="text-2xl font-bold text-white mb-6">
+      <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">
         <EditableField
           value="Billing & Subscription"
           onChange={() => {}} // Static for now
-          className="text-2xl font-bold text-white"
+          className="text-xl sm:text-2xl font-bold text-white"
           placeholder="Page Title"
         />
       </h2>
@@ -435,17 +435,17 @@ export const BillingContent: React.FC<{ user: UserData }> = ({ user }) => {
     </div>
 
     {/* Membership Status */}
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+    <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold text-white">
+        <h3 className="text-base sm:text-lg font-bold text-white">
           <EditableField
             value="Membership Status"
             onChange={() => {}} // Static section title
-            className="text-lg font-bold text-white"
+            className="text-base sm:text-lg font-bold text-white"
             placeholder="Section Title"
           />
         </h3>
-        <span className={`px-3 py-1 text-white text-sm rounded-full ${
+        <span className={`px-2 sm:px-3 py-1 text-white text-xs sm:text-sm rounded-full ${
           subscriptionInfo?.status === 'cancelled' ? 'bg-orange-600' : 'bg-green-600'
         }`}>
           <EditableField
@@ -599,12 +599,6 @@ export const SettingsContent: React.FC<{
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  
-  // Notification settings state
-  const [notifications, setNotifications] = useState({
-    courseUpdates: true,
-    emailNotifications: false
-  });
 
   // Update form data when user changes
   useEffect(() => {
@@ -668,47 +662,14 @@ export const SettingsContent: React.FC<{
     setSuccess('');
   };
 
-  // Notification toggle handlers
-  const handleNotificationToggle = async (type: 'courseUpdates' | 'emailNotifications') => {
-    const newValue = !notifications[type];
-    
-    // Update local state immediately for responsive UI
-    setNotifications(prev => ({
-      ...prev,
-      [type]: newValue
-    }));
-
-    // TODO: Implement API call to save notification preferences to database
-    // TODO: Add user_notifications table with columns: user_id, course_updates, email_notifications
-    // TODO: Create PUT /api/auth/notifications endpoint
-    
-    try {
-      // API call would go here
-      console.log(`Updated ${type} to ${newValue} for user ${user.id}`);
-      
-      // TODO: If courseUpdates is enabled and course content is updated, send email notification
-      // TODO: If emailNotifications is enabled, send welcome email and periodic updates
-      // TODO: Implement email service using nodemailer or similar
-      // TODO: Create email templates for course updates and general notifications
-      
-    } catch (error) {
-      // Revert state on error
-      setNotifications(prev => ({
-        ...prev,
-        [type]: !newValue
-      }));
-      console.error('Failed to update notification setting:', error);
-    }
-  };
-
   return (
   <div className="space-y-8">
     <div>
-      <h2 className="text-2xl font-bold text-white mb-6">
+      <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">
         <EditableField
           value="Settings"
           onChange={() => {}} // Static for now
-          className="text-2xl font-bold text-white"
+          className="text-xl sm:text-2xl font-bold text-white"
           placeholder="Page Title"
         />
       </h2>
@@ -723,13 +684,13 @@ export const SettingsContent: React.FC<{
     </div>
 
     {/* Profile Settings */}
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+    <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold text-white">
+        <h3 className="text-base sm:text-lg font-bold text-white">
           <EditableField
             value="Profile Information"
             onChange={() => {}} // Static section title
-            className="text-lg font-bold text-white"
+            className="text-base sm:text-lg font-bold text-white"
             placeholder="Section Title"
           />
         </h3>
@@ -819,64 +780,6 @@ export const SettingsContent: React.FC<{
                 : 'bg-gray-800 border-gray-700'
             }`}
           />
-        </div>
-      </div>
-    </div>
-
-    {/* Notifications */}
-    <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-      <h3 className="text-lg font-bold text-white mb-4">
-        <EditableField
-          value="Notifications"
-          onChange={() => {}} // Static section title
-          className="text-lg font-bold text-white"
-          placeholder="Section Title"
-        />
-      </h3>
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <span className="text-white">
-            <EditableField
-              value="Course Updates"
-              onChange={() => {}} // Static setting label
-              className="text-white"
-              placeholder="Setting Label"
-            />
-          </span>
-          <button 
-            onClick={() => handleNotificationToggle('courseUpdates')}
-            className={`w-12 h-6 rounded-full relative transition-colors ${
-              notifications.courseUpdates ? 'bg-blue-600' : 'bg-gray-600'
-            }`}
-          >
-            <div 
-              className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform ${
-                notifications.courseUpdates ? 'right-0.5' : 'left-0.5'
-              }`}
-            ></div>
-          </button>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-white">
-            <EditableField
-              value="Email Notifications"
-              onChange={() => {}} // Static setting label
-              className="text-white"
-              placeholder="Setting Label"
-            />
-          </span>
-          <button 
-            onClick={() => handleNotificationToggle('emailNotifications')}
-            className={`w-12 h-6 rounded-full relative transition-colors ${
-              notifications.emailNotifications ? 'bg-blue-600' : 'bg-gray-600'
-            }`}
-          >
-            <div 
-              className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform ${
-                notifications.emailNotifications ? 'right-0.5' : 'left-0.5'
-              }`}
-            ></div>
-          </button>
         </div>
       </div>
     </div>

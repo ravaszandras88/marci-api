@@ -539,24 +539,24 @@ export const CourseContent: React.FC<CourseContentProps> = ({
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-8 rounded-xl border border-gray-700">
-        <h1 className="text-3xl font-bold text-white mb-4">
+      <div className="bg-gradient-to-r from-gray-900 to-gray-800 p-4 sm:p-6 md:p-8 rounded-xl border border-gray-700">
+        <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 sm:mb-4">
           <EditableField
             value={displayCourse.title}
             onChange={(value) => updateCourseField(course.id, 'title', value)}
-            className="text-3xl font-bold text-white"
+            className="text-xl sm:text-2xl md:text-3xl font-bold text-white"
             placeholder="Course Title"
           />
         </h1>
         <EditableField
           value={displayCourse.description}
           onChange={(value) => updateCourseField(course.id, 'description', value)}
-          className="text-gray-300 mb-6 block"
+          className="text-gray-300 mb-4 sm:mb-6 block text-sm sm:text-base"
           multiline={true}
           placeholder="Course description..."
           as="div"
         />
-        <div className="flex items-center gap-6 text-sm text-gray-400">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 text-xs sm:text-sm text-gray-400">
           {courseType !== 'yearly' && (
             <span className="flex items-center gap-2">
               <Video className="h-4 w-4" />
@@ -579,20 +579,20 @@ export const CourseContent: React.FC<CourseContentProps> = ({
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         <div className="lg:col-span-2">
           {(() => {
             const displayEpisode = courseType === 'yearly' ? course.modules[0] : currentEpisode;
             return displayEpisode ? (
               <div>
-                <h2 className="text-xl font-bold text-white mb-4">
+                <h2 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4">
                   <EditableField
                     value={courseType === 'yearly' ? course.title : displayEpisode.title}
                     onChange={(value) => courseType === 'yearly' 
                       ? updateCourseField(course.id, 'title', value)
                       : updateModuleField(course.id, displayEpisode.id, 'title', value)
                     }
-                    className="text-xl font-bold text-white"
+                    className="text-lg sm:text-xl font-bold text-white"
                     placeholder={courseType === 'yearly' ? "Course Title" : "Episode Title"}
                   />
                 </h2>
@@ -747,8 +747,8 @@ export const CourseContent: React.FC<CourseContentProps> = ({
           ) : (
             // Fallback for when there are no modules
             <div className="bg-gray-900 border border-gray-700 rounded-xl p-8 text-center">
-              <h2 className="text-xl font-bold text-white mb-4">No Content Available</h2>
-              <p className="text-gray-400 mb-6">
+              <h2 className="text-lg sm:text-xl font-bold text-white mb-3 sm:mb-4">No Content Available</h2>
+              <p className="text-sm sm:text-base text-gray-400 mb-4 sm:mb-6">
                 This course doesn't have any content yet. Please contact the administrator to add course materials.
               </p>
               {isAdmin && isEditMode && (
@@ -763,8 +763,8 @@ export const CourseContent: React.FC<CourseContentProps> = ({
         
         <div className="space-y-4">
           {courseType !== 'yearly' && (
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-bold text-white">Course Episodes</h3>
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 mb-4">
+              <h3 className="text-lg sm:text-xl font-bold text-white">Course Episodes</h3>
               {courseType === 'monthly' ? (
                 <div className="flex items-center gap-2">
                   <button
@@ -773,7 +773,7 @@ export const CourseContent: React.FC<CourseContentProps> = ({
                   >
                     <ChevronLeft className="h-5 w-5 text-gray-400 group-hover:text-gray-200 transition-colors" />
                   </button>
-                  <span className="text-sm font-medium text-gray-300 min-w-[120px] text-center">
+                  <span className="text-xs sm:text-sm font-medium text-gray-300 min-w-[100px] sm:min-w-[120px] text-center">
                     {monthNames[selectedMonth]} {courseYear}
                   </span>
                   <button
@@ -784,7 +784,7 @@ export const CourseContent: React.FC<CourseContentProps> = ({
                   </button>
                 </div>
               ) : (
-                <span className="text-sm text-gray-400">
+                <span className="text-xs sm:text-sm text-gray-400">
                   {localModules.filter(m => m.completed).length} of {localModules.length} completed
                 </span>
               )}
@@ -803,7 +803,7 @@ export const CourseContent: React.FC<CourseContentProps> = ({
                   <div 
                     key={episode.id} 
                     onClick={() => courseType !== 'yearly' && handleEpisodeSelect(index, episode)}
-                    className={`p-4 rounded-xl border transition-colors group ${
+                    className={`p-3 sm:p-4 rounded-xl border transition-colors group ${
                       courseType === 'yearly' 
                         ? 'bg-blue-900/30 border-blue-500 ring-2 ring-blue-500/50'
                         : isCurrentEpisode
@@ -813,23 +813,23 @@ export const CourseContent: React.FC<CourseContentProps> = ({
                             : 'bg-gray-900 border-gray-700 hover:border-blue-500'
                     } ${courseType !== 'yearly' ? 'cursor-pointer' : ''}`}
                   >
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-700 text-gray-300 text-sm font-medium">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gray-700 text-gray-300 text-xs sm:text-sm font-medium">
                       {displayIndex}
                     </div>
                   
                   {episode.completed ? (
-                    <CheckCircle className="h-5 w-5 text-green-400" />
+                    <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
                   ) : (
-                    <Play className="h-5 w-5 text-blue-400" />
+                    <Play className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
                   )}
                   
                   <div className="flex-1">
-                    <h4 className="font-semibold text-white">
+                    <h4 className="text-sm sm:text-base font-semibold text-white">
                       <EditableField
                         value={episode.title}
                         onChange={(value) => updateModuleField(course.id, episode.id, 'title', value)}
-                        className="font-semibold text-white"
+                        className="text-sm sm:text-base font-semibold text-white"
                         placeholder="Episode Title"
                       />
                     </h4>
@@ -865,9 +865,9 @@ export const CourseContent: React.FC<CourseContentProps> = ({
           {isAdmin && isEditMode && (
             <button
               onClick={handleAddEpisode}
-              className="flex h-10 w-full items-center rounded-xl border border-dashed border-gray-600 text-gray-500 hover:border-blue-500 hover:text-blue-400 transition-all duration-200 p-4"
+              className="flex h-10 w-full items-center rounded-xl border border-dashed border-gray-600 text-gray-500 hover:border-blue-500 hover:text-blue-400 transition-all duration-200 p-3 sm:p-4"
             >
-              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gray-700 text-gray-300 text-sm font-medium mr-3">
+              <div className="flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gray-700 text-gray-300 text-xs sm:text-sm font-medium mr-2 sm:mr-3">
                 <Plus className="h-4 w-4" />
               </div>
               <span className="text-sm font-medium">
