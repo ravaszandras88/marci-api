@@ -20,10 +20,13 @@ import { useToast } from "@/components/ui/toast";
 function Header1() {
     const { user, logout } = useAuth();
     const { showToast } = useToast();
-    const [isOpen, setOpen] = useState(false);
+    const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [isUserDropdownOpen, setUserDropdownOpen] = useState(false);
     const [dropdownPosition, setDropdownPosition] = useState<'top' | 'bottom'>('bottom');
+    const [isHeaderVisible, setIsHeaderVisible] = useState(true);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const buttonRef = useRef<HTMLButtonElement>(null);
+    const headerRef = useRef<HTMLDivElement>(null);
     
     const handleLogout = () => {
         logout();
@@ -31,15 +34,49 @@ function Header1() {
         showToast("Successfully signed out. See you next time!", "success");
     };
 
-    // Debug: Component mount
+    // Debug and fix header visibility issue
     useEffect(() => {
-        console.log('🔵 Header component mounted - dropdown debugging active');
+        console.log('🔵 Header component mounted');
+        
+        // Force header to be visible
+        if (headerRef.current) {
+            const styles = window.getComputedStyle(headerRef.current);
+            console.log('Header initial styles:', {
+                position: styles.position,
+                top: styles.top,
+                zIndex: styles.zIndex,
+                display: styles.display,
+                visibility: styles.visibility,
+                opacity: styles.opacity,
+                transform: styles.transform
+            });
+            
+            // Force visibility
+            headerRef.current.style.visibility = 'visible';
+            headerRef.current.style.opacity = '1';
+            headerRef.current.style.transform = 'translateY(0)';
+        }
+        
+        // Check on scroll
+        const handleScroll = () => {
+            if (headerRef.current) {
+                const rect = headerRef.current.getBoundingClientRect();
+                console.log('Header position on scroll:', {
+                    top: rect.top,
+                    visible: rect.top >= 0,
+                    height: rect.height
+                });
+            }
+        };
+        
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     // Debug: State changes
     useEffect(() => {
-        console.log(`📊 isOpen state changed to: ${isOpen}`);
-    }, [isOpen]);
+        console.log(`📊 isUserDropdownOpen state changed to: ${isUserDropdownOpen}`);
+    }, [isUserDropdownOpen]);
 
     // Check if dropdown should appear above or below
     const checkDropdownPosition = () => {
@@ -60,7 +97,11 @@ function Header1() {
     // Handle closing with animation - Framer Motion handles the exit animation
     const closeDropdown = useCallback(() => {
         console.log('🔴 closeDropdown called - Framer Motion will handle exit animation');
-        setOpen(false);
+        setUserDropdownOpen(false);
+    }, []);
+    
+    const closeMobileMenu = useCallback(() => {
+        setMobileMenuOpen(false);
     }, []);
 
     // Close dropdown when clicking outside
@@ -92,7 +133,7 @@ function Header1() {
 
     // Recalculate position on window resize
     useEffect(() => {
-        if (isOpen) {
+        if (isUserDropdownOpen) {
             const handleResize = () => {
                 checkDropdownPosition();
             };
@@ -102,7 +143,7 @@ function Header1() {
                 window.removeEventListener('resize', handleResize);
             };
         }
-    }, [isOpen]);
+    }, [isUserDropdownOpen]);
 
     
     const navigationItems = [
@@ -160,9 +201,24 @@ function Header1() {
     ];
 
     return (
-        <header className="w-full z-40 fixed top-0 left-0 bg-black/90 backdrop-blur-md border-b border-gray-800">
-            <div className="container relative mx-auto min-h-16 sm:min-h-20 flex gap-2 sm:gap-4 flex-row lg:grid lg:grid-cols-3 items-center px-4 sm:px-6 lg:px-8">
-                <div className="justify-start items-center gap-4 lg:flex hidden flex-row">
+        <header 
+            ref={headerRef} 
+            className="w-full z-[9999] fixed top-0 left-0 bg-black backdrop-blur-md border-b border-gray-800/80"
+            style={{
+                visibility: 'visible',
+                opacity: 1,
+                transform: 'translateY(0)',
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                zIndex: 9999
+            }}
+        >
+            <div className="relative w-full h-14 sm:h-16 md:h-20 flex items-center px-3 sm:px-4 md:px-6 lg:px-8 bg-black">
+                {/* Desktop Navigation - Hidden on mobile */}
+                <div className="hidden lg:flex items-center justify-between w-full">
+                    <div className="flex items-center gap-4">
                     <NavigationMenu className="flex justify-start items-start">
                         <NavigationMenuList className="flex justify-start gap-4 flex-row">
                             {navigationItems.map((item) => (
@@ -211,31 +267,35 @@ function Header1() {
                             ))}
                         </NavigationMenuList>
                     </NavigationMenu>
-                </div>
-                <div className="flex lg:justify-center">
-                    <p className="font-bold text-lg sm:text-xl">
-                        Marcel <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Nyirő</span>
-                    </p>
-                </div>
-                <div className="flex justify-end w-full gap-2 sm:gap-4 items-center">
+                    </div>
+                    
+                    {/* Logo - Desktop center */}
+                    <div className="flex justify-center">
+                        <p className="font-bold text-xl whitespace-nowrap">
+                            Marcel <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Nyirő</span>
+                        </p>
+                    </div>
+                
+                    {/* Desktop navigation buttons */}
+                    <div className="flex items-center gap-2">
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button variant="ghost" className="hidden lg:inline text-gray-300 hover:text-white hover:bg-gray-800 text-sm">
+                        <Button variant="ghost" className="text-gray-300 hover:text-white hover:bg-gray-800 text-sm min-h-[40px]">
                             <Link href="/#services">Services</Link>
                         </Button>
                     </motion.div>
-                    <div className="border-r border-gray-700 hidden lg:inline"></div>
+                    <div className="border-r border-gray-700 h-6"></div>
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white text-sm px-3 sm:px-4 py-2 hidden sm:inline-flex">
+                        <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white text-sm px-3 md:px-4 py-2 min-h-[40px] touch-manipulation">
                             <Link href="/#contact">Contact</Link>
                         </Button>
                     </motion.div>
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="hidden md:block">
-                        <Button className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 sm:px-4 py-2">
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Button className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 md:px-4 py-2 min-h-[40px] touch-manipulation">
                             <Link href="/courses">Start Learning</Link>
                         </Button>
                     </motion.div>
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 sm:px-4 py-2">
+                        <Button className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 md:px-4 py-2 min-h-[40px] touch-manipulation">
                             <Link href="/#contact">Get Started</Link>
                         </Button>
                     </motion.div>
@@ -246,15 +306,15 @@ function Header1() {
                             ref={buttonRef}
                             variant="ghost" 
                             size="sm"
-                            className={`p-2 text-white hover:bg-gray-800 rounded-full min-h-[40px] min-w-[40px] ${user ? 'bg-blue-600/20 border border-blue-500/30' : ''}`}
+                            className={`p-1.5 sm:p-2 text-white hover:bg-gray-800 rounded-full min-h-[40px] min-w-[40px] sm:min-h-[44px] sm:min-w-[44px] touch-manipulation ${user ? 'bg-blue-600/20 border border-blue-500/30' : ''}`}
                             onClick={() => {
                                 console.log('Button clicked!'); // Simple log
                                 window.console.log('Window console test'); // Direct window console
                                 
-                                if (!isOpen) {
+                                if (!isUserDropdownOpen) {
                                     console.log('🟢 Button clicked - opening dropdown');
                                     checkDropdownPosition();
-                                    setOpen(true);
+                                    setUserDropdownOpen(true);
                                     console.log('🟢 Dropdown position:', dropdownPosition);
                                 } else {
                                     console.log('🔴 Button clicked - closing dropdown');
@@ -272,7 +332,7 @@ function Header1() {
                             mode="wait"
                             onExitComplete={() => console.log('⚫ AnimatePresence: Exit animation complete')}
                         >
-                            {isOpen && (
+                            {isUserDropdownOpen && (
                                 <motion.div 
                                     key="dropdown"
                                     className={`absolute right-0 w-56 bg-gray-900 border border-gray-700 rounded-xl shadow-lg py-2 z-50 ${
@@ -366,12 +426,117 @@ function Header1() {
                         </AnimatePresence>
                     </div>
                 </div>
-                <div className="flex w-12 shrink lg:hidden items-end justify-end">
-                    <Button variant="ghost" onClick={() => setOpen(!isOpen)} className="text-gray-300 hover:text-white hover:bg-gray-800 p-2 min-h-[40px] min-w-[40px]">
-                        {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                    </Button>
-                    {isOpen && (
-                        <div className="absolute top-16 sm:top-20 border-t border-gray-700 flex flex-col w-full right-0 bg-gray-900 shadow-lg py-4 container gap-6 sm:gap-8">
+                </div>
+                
+                {/* Mobile Layout - Visible only on mobile */}
+                <div className="flex lg:hidden items-center justify-between w-full">
+                    {/* Logo - Mobile */}
+                    <div className="flex-shrink-0">
+                        <p className="font-bold text-sm sm:text-base whitespace-nowrap">
+                            Marcel <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Nyirő</span>
+                        </p>
+                    </div>
+                    
+                    {/* Mobile buttons container */}
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                        {/* Hamburger Menu Button */}
+                        <Button 
+                            variant="ghost" 
+                            onClick={() => setMobileMenuOpen(!isMobileMenuOpen)} 
+                            className="text-gray-300 hover:text-white hover:bg-gray-800 p-1.5 min-h-[36px] min-w-[36px] touch-manipulation order-last"
+                        >
+                            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                        </Button>
+                        
+                        {/* Mobile Get Started Button (hidden on smallest screens) */}
+                        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="hidden sm:block">
+                            <Button className="bg-blue-600 hover:bg-blue-700 text-white text-xs px-2 py-1.5 min-h-[36px] touch-manipulation">
+                                <Link href="/#contact">Get Started</Link>
+                            </Button>
+                        </motion.div>
+                        
+                        {/* User Account Button - Mobile */}
+                        <div className="relative">
+                            <Button 
+                                variant="ghost" 
+                                size="sm"
+                                className={`p-1.5 text-white hover:bg-gray-800 rounded-full min-h-[36px] min-w-[36px] touch-manipulation ${user ? 'bg-blue-600/20 border border-blue-500/30' : ''}`}
+                                onClick={() => {
+                                    if (!isUserDropdownOpen) {
+                                        checkDropdownPosition();
+                                        setUserDropdownOpen(true);
+                                    } else {
+                                        closeDropdown();
+                                    }
+                                }}
+                            >
+                                <User className="h-4 w-4" />
+                                {user && (
+                                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full border-2 border-black"></span>
+                                )}
+                            </Button>
+                            
+                            <AnimatePresence mode="wait">
+                                {isUserDropdownOpen && (
+                                    <motion.div 
+                                        key="mobile-dropdown"
+                                        className={`absolute right-0 w-48 bg-gray-900 border border-gray-700 rounded-xl shadow-lg py-2 z-50 ${
+                                            dropdownPosition === 'bottom' ? 'top-10' : 'bottom-10'
+                                        }`}
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.95 }}
+                                        transition={{ duration: 0.15 }}
+                                    >
+                                        {/* Mobile user dropdown content */}
+                                        {user ? (
+                                            <>
+                                                <div className="px-3 py-2 border-b border-gray-700">
+                                                    <p className="text-xs text-gray-300">Signed in as</p>
+                                                    <p className="text-sm font-medium text-white truncate">{user.name}</p>
+                                                </div>
+                                                <Link 
+                                                    href="/courses" 
+                                                    className="flex items-center px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-white text-sm"
+                                                    onClick={closeDropdown}
+                                                >
+                                                    <User className="h-3 w-3 mr-2" />
+                                                    My Courses
+                                                </Link>
+                                                <button
+                                                    onClick={handleLogout}
+                                                    className="w-full flex items-center px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-white text-sm"
+                                                >
+                                                    <LogOut className="h-3 w-3 mr-2" />
+                                                    Sign Out
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <AuthModal defaultTab="signin">
+                                                    <div className="w-full flex items-center px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-white text-sm cursor-pointer">
+                                                        <User className="h-3 w-3 mr-2" />
+                                                        Sign In
+                                                    </div>
+                                                </AuthModal>
+                                                <AuthModal defaultTab="register">
+                                                    <div className="w-full flex items-center px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-white text-sm cursor-pointer">
+                                                        <User className="h-3 w-3 mr-2" />
+                                                        Register
+                                                    </div>
+                                                </AuthModal>
+                                            </>
+                                        )}
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* Mobile menu dropdown - moved outside header container */}
+            {isMobileMenuOpen && (
+                <div className="fixed top-14 sm:top-16 md:top-20 border-t border-gray-700 flex flex-col w-full left-0 bg-gray-900/95 backdrop-blur-sm shadow-lg py-6 px-4 gap-4 sm:gap-6 z-[90]">
                             {navigationItems.map((item) => (
                                 <div key={item.title}>
                                     <div className="flex flex-col gap-2">
@@ -379,7 +544,7 @@ function Header1() {
                                             <Link
                                                 href={item.href}
                                                 className="flex justify-between items-center text-gray-300 hover:text-white py-2 px-3 rounded-lg hover:bg-gray-800 transition-colors min-h-[48px]"
-                                                onClick={closeDropdown}
+                                                onClick={closeMobileMenu}
                                             >
                                                 <span className="text-lg">{item.title}</span>
                                                 <MoveRight className="w-4 h-4 stroke-1 text-gray-500" />
@@ -393,7 +558,7 @@ function Header1() {
                                                     key={subItem.title}
                                                     href={subItem.href}
                                                     className="flex justify-between items-center text-gray-400 hover:text-white py-2 px-3 ml-4 rounded-lg hover:bg-gray-800 transition-colors min-h-[44px]"
-                                                    onClick={closeDropdown}
+                                                    onClick={closeMobileMenu}
                                                 >
                                                     <span>
                                                         {subItem.title}
@@ -404,10 +569,8 @@ function Header1() {
                                     </div>
                                 </div>
                             ))}
-                        </div>
-                    )}
                 </div>
-            </div>
+            )}
         </header>
     );
 }

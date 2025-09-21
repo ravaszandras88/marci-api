@@ -100,15 +100,15 @@ export default function Home() {
       {/* Navigation */}
       
       {/* Hero Section */}
-      <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-clip">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-black to-purple-600/20"></div>
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-10 sm:top-20 left-5 sm:left-10 w-48 sm:w-72 h-48 sm:h-72 bg-blue-500/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 sm:bottom-20 right-5 sm:right-10 w-64 sm:w-96 h-64 sm:h-96 bg-purple-500/10 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 sm:w-80 h-60 sm:h-80 bg-white/5 rounded-full blur-3xl"></div>
         </div>
         
-        <div className="relative z-10 max-w-7xl mx-auto px-4 text-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 md:px-8 text-center">
           <motion.div 
             className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600/20 border border-blue-500/30 rounded-full text-blue-300 text-sm mb-8"
             initial={{ opacity: 0, y: 20 }}
@@ -116,11 +116,12 @@ export default function Home() {
             transition={{ duration: 0.6 }}
           >
             <Zap className="h-4 w-4" />
-            <span>73M HUF OUVC Investment • First Hungarian University VC</span>
+            <span className="text-center">73M HUF OUVC Investment</span>
+            <span>• First Hungarian University VC</span>
           </motion.div>
           
           <motion.h1 
-            className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold text-white mb-6 leading-tight"
+            className="text-4xl md:text-6xl lg:text-8xl font-bold text-white mb-6 leading-tight"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -130,67 +131,67 @@ export default function Home() {
           </motion.h1>
           
           <motion.p 
-            className="text-lg sm:text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8 leading-relaxed px-4"
+            className="text-lg md:text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto mb-8 leading-relaxed px-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             AI Entrepreneur & Strategic Advisor transforming ideas into funded realities.
-            <span className="text-blue-400 font-semibold"> Proven track record with Outfino's 73M HUF success.</span>
+            <span className="text-blue-400 font-semibold"> Proven track record with Outfino&apos;s 73M HUF success.</span>
           </motion.p>
           
           <motion.div 
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12"
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12 px-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
           >
-            <Link href="#contact" className="group inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105">
+            <Link href="#contact" className="group inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 w-full sm:w-auto text-center justify-center">
               <span>Start Your Project</span>
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Link>
-            <Link href="#achievements" className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 border border-white/20">
+            <Link href="#achievements" className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-8 py-4 rounded-xl font-semibold transition-all duration-300 border border-white/20 w-full sm:w-auto text-center justify-center">
               <span>View Success Stories</span>
             </Link>
           </motion.div>
           
           <motion.div 
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 max-w-4xl mx-auto px-4"
+            className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto px-4"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
           >
             <motion.div 
-              className="text-center"
+              className="text-center p-4 rounded-lg bg-white/5 backdrop-blur-sm"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <div className="text-2xl sm:text-3xl font-bold text-white mb-2">73M</div>
-              <div className="text-gray-400 text-xs sm:text-sm">HUF Investment</div>
+              <div className="text-2xl md:text-3xl font-bold text-white mb-2">73M</div>
+              <div className="text-gray-400 text-sm">HUF Investment</div>
             </motion.div>
             <motion.div 
-              className="text-center"
+              className="text-center p-4 rounded-lg bg-white/5 backdrop-blur-sm"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <div className="text-2xl sm:text-3xl font-bold text-white mb-2">6+</div>
-              <div className="text-gray-400 text-xs sm:text-sm">Years Experience</div>
+              <div className="text-2xl md:text-3xl font-bold text-white mb-2">6+</div>
+              <div className="text-gray-400 text-sm">Years Experience</div>
             </motion.div>
             <motion.div 
-              className="text-center"
+              className="text-center p-4 rounded-lg bg-white/5 backdrop-blur-sm"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <div className="text-2xl sm:text-3xl font-bold text-white mb-2">300+</div>
-              <div className="text-gray-400 text-xs sm:text-sm">Platform Users</div>
+              <div className="text-2xl md:text-3xl font-bold text-white mb-2">300+</div>
+              <div className="text-gray-400 text-sm">Platform Users</div>
             </motion.div>
             <motion.div 
-              className="text-center"
+              className="text-center p-4 rounded-lg bg-white/5 backdrop-blur-sm"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <div className="text-2xl sm:text-3xl font-bold text-white mb-2">Top</div>
-              <div className="text-gray-400 text-xs sm:text-sm">Startup Award</div>
+              <div className="text-2xl md:text-3xl font-bold text-white mb-2">Top</div>
+              <div className="text-gray-400 text-sm">Startup Award</div>
             </motion.div>
           </motion.div>
         </div>
@@ -206,7 +207,7 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Transforming <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Ideas</span> into Reality
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -215,7 +216,7 @@ export default function Home() {
             </p>
           </motion.div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-20 max-w-5xl mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20 max-w-5xl mx-auto px-4">
             <motion.div 
               className="group relative bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-2xl border border-gray-700 hover:border-blue-500/50 transition-all duration-300"
               initial={{ opacity: 0, y: 50 }}
@@ -323,7 +324,7 @@ export default function Home() {
       
       {/* Achievement Showcase */}
       <section id="achievements" className="py-20 bg-gradient-to-br from-gray-900 to-black">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div 
             className="text-center mb-16"
             initial={{ opacity: 0, y: 30 }}
@@ -331,17 +332,17 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
               Proven <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Track Record</span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
               Real results from real ventures. See how strategic vision transforms into measurable success.
             </p>
           </motion.div>
           
           <div className="relative">
             <motion.div 
-              className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"
+              className="hidden sm:block absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"
               initial={{ scaleY: 0 }}
               whileInView={{ scaleY: 1 }}
               transition={{ duration: 1, delay: 0.2 }}
@@ -349,44 +350,44 @@ export default function Home() {
               style={{ originY: 0 }}
             ></motion.div>
             
-            <div className="space-y-16">
+            <div className="space-y-12">
               <motion.div 
-                className="flex flex-col md:flex-row items-center gap-8"
+                className="flex flex-col lg:flex-row items-center gap-8"
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
                 viewport={{ once: true }}
               >
-                <div className="md:w-1/2 md:text-right">
+                <div className="w-full lg:w-1/2 lg:text-right">
                   <motion.div 
                     className="bg-gradient-to-br from-blue-900 to-blue-800 p-8 rounded-2xl border border-blue-700"
                     whileHover={{ scale: 1.02, y: -5 }}
                     transition={{ type: "spring", stiffness: 300 }}
                   >
-                    <div className="flex items-center gap-3 mb-4 justify-end">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4 sm:justify-between">
                       <h3 className="text-2xl font-bold text-white">Outfino Success</h3>
-                      <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
+                      <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
                         <Lightbulb className="h-6 w-6 text-white" />
                       </div>
                     </div>
-                    <p className="text-blue-200 mb-4">
+                    <p className="text-base text-blue-200 mb-4">
                       AI-powered fashion platform securing 73M HUF investment from OUVC - 
                       the first Hungarian university-backed VC investment.
                     </p>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="text-center">
-                        <div className="text-xl sm:text-2xl font-bold text-white">73M HUF</div>
-                        <div className="text-blue-300 text-xs sm:text-sm">Investment</div>
+                        <div className="text-2xl font-bold text-white">73M HUF</div>
+                        <div className="text-blue-300 text-sm">Investment</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-xl sm:text-2xl font-bold text-white">300+</div>
-                        <div className="text-blue-300 text-xs sm:text-sm">Users</div>
+                        <div className="text-2xl font-bold text-white">300+</div>
+                        <div className="text-blue-300 text-sm">Users</div>
                       </div>
                     </div>
                   </motion.div>
                 </div>
                 <motion.div 
-                  className="relative z-10 w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center"
+                  className="relative z-10 w-16 h-16 bg-blue-600 rounded-full items-center justify-center flex-shrink-0 hidden lg:flex"
                   initial={{ scale: 0 }}
                   whileInView={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 300, delay: 0.5 }}
@@ -395,19 +396,19 @@ export default function Home() {
                 >
                   <span className="text-white font-bold">2025</span>
                 </motion.div>
-                <div className="md:w-1/2"></div>
+                <div className="hidden lg:block lg:w-1/2"></div>
               </motion.div>
               
               <motion.div 
-                className="flex flex-col md:flex-row items-center gap-8"
+                className="flex flex-col lg:flex-row items-center gap-8"
                 initial={{ opacity: 0, x: 50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
               >
-                <div className="md:w-1/2"></div>
+                <div className="hidden lg:block lg:w-1/2"></div>
                 <motion.div 
-                  className="relative z-10 w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center"
+                  className="relative z-10 w-16 h-16 bg-purple-600 rounded-full items-center justify-center flex-shrink-0 hidden lg:flex"
                   initial={{ scale: 0 }}
                   whileInView={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 300, delay: 0.4 }}
@@ -416,19 +417,19 @@ export default function Home() {
                 >
                   <span className="text-white font-bold">2024</span>
                 </motion.div>
-                <div className="md:w-1/2">
+                <div className="w-full lg:w-1/2">
                   <motion.div 
                     className="bg-gradient-to-br from-purple-900 to-purple-800 p-8 rounded-2xl border border-purple-700"
                     whileHover={{ scale: 1.02, y: -5 }}
                     transition={{ type: "spring", stiffness: 300 }}
                   >
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4">
+                      <div className="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
                         <Trophy className="h-6 w-6 text-white" />
                       </div>
                       <h3 className="text-2xl font-bold text-white">Ubives Recognition</h3>
                     </div>
-                    <p className="text-purple-200 mb-4">
+                    <p className="text-base text-purple-200 mb-4">
                       Previous venture recognized as "top startup of the year" by Growth Magazine, 
                       establishing credibility in the Hungarian startup ecosystem.
                     </p>
@@ -447,25 +448,25 @@ export default function Home() {
               </motion.div>
               
               <motion.div 
-                className="flex flex-col md:flex-row items-center gap-8"
+                className="flex flex-col lg:flex-row items-center gap-8"
                 initial={{ opacity: 0, x: -50 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
                 viewport={{ once: true }}
               >
-                <div className="md:w-1/2 md:text-right">
+                <div className="w-full lg:w-1/2 lg:text-right">
                   <motion.div 
                     className="bg-gradient-to-br from-green-900 to-green-800 p-8 rounded-2xl border border-green-700"
                     whileHover={{ scale: 1.02, y: -5 }}
                     transition={{ type: "spring", stiffness: 300 }}
                   >
-                    <div className="flex items-center gap-3 mb-4 justify-end">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-4 sm:justify-between">
                       <h3 className="text-2xl font-bold text-white">Trophien Foundation</h3>
-                      <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center">
+                      <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center flex-shrink-0">
                         <Building2 className="h-6 w-6 text-white" />
                       </div>
                     </div>
-                    <p className="text-green-200 mb-4">
+                    <p className="text-base text-green-200 mb-4">
                       Founded first IT company at university, successfully operating for 6+ years 
                       developing solutions for various clients.
                     </p>
@@ -482,7 +483,7 @@ export default function Home() {
                   </motion.div>
                 </div>
                 <motion.div 
-                  className="relative z-10 w-16 h-16 bg-green-600 rounded-full flex items-center justify-center"
+                  className="relative z-10 w-16 h-16 bg-green-600 rounded-full items-center justify-center hidden lg:flex"
                   initial={{ scale: 0 }}
                   whileInView={{ scale: 1 }}
                   transition={{ type: "spring", stiffness: 300, delay: 0.4 }}
@@ -491,7 +492,7 @@ export default function Home() {
                 >
                   <span className="text-white font-bold">2017</span>
                 </motion.div>
-                <div className="md:w-1/2"></div>
+                <div className="hidden lg:block lg:w-1/2"></div>
               </motion.div>
             </div>
           </div>
@@ -501,118 +502,118 @@ export default function Home() {
       {/* Services Section */}
       <section id="services" className="py-20 bg-black relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-20 right-20 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 left-20 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-10 sm:top-20 right-10 sm:right-20 w-32 sm:w-64 h-32 sm:h-64 bg-blue-500/5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 sm:bottom-20 left-10 sm:left-20 w-40 sm:w-80 h-40 sm:h-80 bg-purple-500/5 rounded-full blur-3xl"></div>
         </div>
         
-        <div className="relative z-10 max-w-7xl mx-auto px-4">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
               Transform Your <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Vision</span> into Success
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
               Work directly with the entrepreneur who secured 73M HUF funding and built multiple successful ventures. 
               Get the strategic guidance that delivers results.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {/* Speaking Engagements */}
             <div className="group relative bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-2xl border border-gray-700 hover:border-blue-500/50 transition-all duration-300 transform hover:-translate-y-2">
-              <div className="absolute -top-4 -right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+              <div className="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 bg-blue-600 text-white px-2 sm:px-3 py-1 rounded-full text-sm font-semibold">
                 Most Popular
               </div>
               
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-6">
+                <div className="w-16 h-16 bg-blue-600 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
                   <Mic className="h-8 w-8 text-white" />
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-white">Speaking Engagements</h3>
-                  <p className="text-blue-400 font-semibold">Quote-based pricing</p>
+                  <p className="text-blue-400 font-semibold text-base">Quote-based pricing</p>
                 </div>
               </div>
               
-              <p className="text-gray-300 mb-6">
+              <p className="text-base text-gray-300 mb-6">
                 Inspire your audience with real stories of AI entrepreneurship, investment success, 
                 and startup scaling. Perfect for conferences, corporate events, and university talks.
               </p>
               
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Check className="h-5 w-5 text-blue-400 flex-shrink-0" />
-                  <span>45-90 minute keynote presentations</span>
+              <div className="space-y-2 sm:space-y-3 mb-8">
+                <div className="flex items-start gap-2 sm:gap-3 text-gray-300">
+                  <Check className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-sm">45-90 minute keynote presentations</span>
                 </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Check className="h-5 w-5 text-blue-400 flex-shrink-0" />
-                  <span>Real-world AI & entrepreneurship stories</span>
+                <div className="flex items-start gap-2 sm:gap-3 text-gray-300">
+                  <Check className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-sm">Real-world AI & entrepreneurship stories</span>
                 </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Check className="h-5 w-5 text-blue-400 flex-shrink-0" />
-                  <span>Interactive Q&A with actionable insights</span>
+                <div className="flex items-start gap-2 sm:gap-3 text-gray-300">
+                  <Check className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-sm">Interactive Q&A with actionable insights</span>
                 </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Check className="h-5 w-5 text-blue-400 flex-shrink-0" />
-                  <span>Post-event networking & follow-up</span>
+                <div className="flex items-start gap-2 sm:gap-3 text-gray-300">
+                  <Check className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-sm">Post-event networking & follow-up</span>
                 </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Check className="h-5 w-5 text-blue-400 flex-shrink-0" />
-                  <span>EU travel included in pricing</span>
+                <div className="flex items-start gap-2 sm:gap-3 text-gray-300">
+                  <Check className="h-5 w-5 text-blue-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-sm">EU travel included in pricing</span>
                 </div>
               </div>
               
-              <Link href="#contact" className="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-semibold transition-colors duration-300">
+              <Link href="#contact" className="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white py-4 rounded-xl font-semibold transition-colors duration-300 ">
                 Request Speaking Quote
               </Link>
             </div>
 
             {/* 1-on-1 Mentoring */}
             <div className="group relative bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-2xl border border-gray-700 hover:border-purple-500/50 transition-all duration-300 transform hover:-translate-y-2">
-              <div className="absolute -top-4 -right-4 bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+              <div className="absolute -top-3 -right-3 sm:-top-4 sm:-right-4 bg-purple-600 text-white px-2 sm:px-3 py-1 rounded-full text-sm font-semibold">
                 One-time
               </div>
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-purple-600 rounded-2xl flex items-center justify-center">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 mb-6">
+                <div className="w-16 h-16 bg-purple-600 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0">
                   <Users className="h-8 w-8 text-white" />
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-white">1-on-1 Mentoring</h3>
-                  <p className="text-purple-400 font-semibold">16,000 HUF</p>
+                  <p className="text-purple-400 font-semibold text-base">16,000 HUF</p>
                   <p className="text-gray-400 text-sm">One-time payment</p>
                 </div>
               </div>
               
-              <p className="text-gray-300 mb-6">
+              <p className="text-base text-gray-300 mb-6">
                 Personal guidance from someone who's been there. Get direct access to proven strategies, 
                 network connections, and the mindset that secured major VC investment.
               </p>
               
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Check className="h-5 w-5 text-purple-400 flex-shrink-0" />
-                  <span>Focused 60-minute deep-dive sessions</span>
+              <div className="space-y-2 sm:space-y-3 mb-8">
+                <div className="flex items-start gap-2 sm:gap-3 text-gray-300">
+                  <Check className="h-5 w-5 text-purple-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-sm">Focused 60-minute deep-dive sessions</span>
                 </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Check className="h-5 w-5 text-purple-400 flex-shrink-0" />
-                  <span>Business strategy & execution planning</span>
+                <div className="flex items-start gap-2 sm:gap-3 text-gray-300">
+                  <Check className="h-5 w-5 text-purple-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-sm">Business strategy & execution planning</span>
                 </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Check className="h-5 w-5 text-purple-400 flex-shrink-0" />
-                  <span>Leadership development & scaling advice</span>
+                <div className="flex items-start gap-2 sm:gap-3 text-gray-300">
+                  <Check className="h-5 w-5 text-purple-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-sm">Leadership development & scaling advice</span>
                 </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Check className="h-5 w-5 text-purple-400 flex-shrink-0" />
-                  <span>Fundraising strategy & VC connections</span>
+                <div className="flex items-start gap-2 sm:gap-3 text-gray-300">
+                  <Check className="h-5 w-5 text-purple-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-sm">Fundraising strategy & VC connections</span>
                 </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Check className="h-5 w-5 text-purple-400 flex-shrink-0" />
-                  <span>Access to exclusive network introductions</span>
+                <div className="flex items-start gap-2 sm:gap-3 text-gray-300">
+                  <Check className="h-5 w-5 text-purple-400 flex-shrink-0 mt-0.5" />
+                  <span className="text-sm">Access to exclusive network introductions</span>
                 </div>
               </div>
               
               <button 
                 onClick={() => setIsMentoringModalOpen(true)}
-                className="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-semibold transition-colors duration-300"
+                className="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white py-4 rounded-xl font-semibold transition-colors duration-300 "
               >
                 Book Now - 16,000 HUF
               </button>
@@ -620,18 +621,18 @@ export default function Home() {
 
           </div>
           
-          <div className="text-center mt-16">
-            <div className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-8 bg-gray-900/50 backdrop-blur border border-gray-700 rounded-2xl p-6">
+          <div className="text-center mt-12 sm:mt-16">
+            <div className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-6 lg:gap-8 bg-gray-900/50 backdrop-blur border border-gray-700 rounded-2xl p-4 sm:p-6">
               <div className="text-center">
                 <div className="text-2xl font-bold text-white">73M HUF</div>
                 <div className="text-gray-400 text-sm">Investment Secured</div>
               </div>
-              <div className="w-px h-8 bg-gray-600"></div>
+              <div className="hidden sm:block w-px h-8 bg-gray-600"></div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-white">6+ Years</div>
                 <div className="text-gray-400 text-sm">Proven Experience</div>
               </div>
-              <div className="w-px h-8 bg-gray-600"></div>
+              <div className="hidden sm:block w-px h-8 bg-gray-600"></div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-white">Top Startup</div>
                 <div className="text-gray-400 text-sm">Award Winner</div>
@@ -644,12 +645,12 @@ export default function Home() {
 
       {/* Testimonials Section */}
       <section id="testimonials" className="py-20 bg-gradient-to-br from-black to-gray-900">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
               Trusted by <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Industry Leaders</span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
               Don't just take my word for it. See what entrepreneurs, founders, and industry leaders 
               say about working with Marcel.
             </p>
@@ -672,22 +673,22 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="mt-16 text-center">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 max-w-4xl mx-auto px-4">
+          <div className="mt-12 sm:mt-16 text-center">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
               <div className="text-center">
-                <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2">Portfolio.hu</div>
-                <div className="text-gray-400 text-xs sm:text-sm">Featured Coverage</div>
+                <div className="text-xl md:text-2xl font-bold text-white mb-2">Portfolio.hu</div>
+                <div className="text-gray-400 text-sm">Featured Coverage</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-2">OUVC</div>
+                <div className="text-xl md:text-2xl font-bold text-white mb-2">OUVC</div>
                 <div className="text-gray-400 text-sm">First Investment</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-2">Growth Mag</div>
+                <div className="text-xl md:text-2xl font-bold text-white mb-2">Growth Mag</div>
                 <div className="text-gray-400 text-sm">Top Startup</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-2">500+</div>
+                <div className="text-xl md:text-2xl font-bold text-white mb-2">500+</div>
                 <div className="text-gray-400 text-sm">LinkedIn Network</div>
               </div>
             </div>
@@ -699,58 +700,58 @@ export default function Home() {
       {/* Contact Section */}
       <section id="contact" className="py-20 bg-black relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-20 w-80 h-80 bg-purple-500/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-10 sm:top-20 left-10 sm:left-20 w-48 sm:w-96 h-48 sm:h-96 bg-blue-500/5 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 sm:bottom-20 right-10 sm:right-20 w-40 sm:w-80 h-40 sm:h-80 bg-purple-500/5 rounded-full blur-3xl"></div>
         </div>
         
-        <div className="relative z-10 max-w-7xl mx-auto px-4">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
               Ready to <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Transform</span> Your Vision?
             </h2>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
               Join successful entrepreneurs who've turned their ideas into funded realities. 
               Let's discuss how to accelerate your journey to the next level.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 px-4">
-            <div className="space-y-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16">
+            <div className="space-y-6 sm:space-y-8">
               <div>
                 <h3 className="text-2xl font-bold text-white mb-8">
                   Get Direct Access to Proven Expertise
                 </h3>
                 
-                <div className="space-y-6">
-                  <div className="group flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-blue-900/20 to-blue-800/20 border border-blue-700/30 hover:border-blue-500/50 transition-all duration-300">
+                <div className="space-y-4 sm:space-y-6">
+                  <div className="group flex flex-col sm:flex-row items-start gap-3 sm:gap-4 p-4 rounded-xl bg-gradient-to-r from-blue-900/20 to-blue-800/20 border border-blue-700/30 hover:border-blue-500/50 transition-all duration-300">
                     <div className="w-14 h-14 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                       <Mail className="h-7 w-7 text-white" />
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <h4 className="font-bold text-white text-lg mb-1">Direct Email</h4>
-                      <p className="text-blue-300 font-semibold">business@marcelnyiro.com</p>
+                      <p className="text-blue-300 font-semibold text-base break-all">business@marcelnyiro.com</p>
                       <p className="text-sm text-gray-400 mt-1">Perfect for detailed business inquiries and partnership discussions</p>
                     </div>
                   </div>
                   
-                  <div className="group flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-purple-900/20 to-purple-800/20 border border-purple-700/30 hover:border-purple-500/50 transition-all duration-300">
+                  <div className="group flex flex-col sm:flex-row items-start gap-3 sm:gap-4 p-4 rounded-xl bg-gradient-to-r from-purple-900/20 to-purple-800/20 border border-purple-700/30 hover:border-purple-500/50 transition-all duration-300">
                     <div className="w-14 h-14 bg-purple-600 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                       <Globe className="h-7 w-7 text-white" />
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <h4 className="font-bold text-white text-lg mb-1">LinkedIn Network</h4>
-                      <p className="text-purple-300 font-semibold">500+ Professional Connections</p>
+                      <p className="text-purple-300 font-semibold text-base">500+ Professional Connections</p>
                       <p className="text-sm text-gray-400 mt-1">Connect for networking, industry insights, and collaboration opportunities</p>
                     </div>
                   </div>
                   
-                  <div className="group flex items-start gap-4 p-4 rounded-xl bg-gradient-to-r from-green-900/20 to-green-800/20 border border-green-700/30 hover:border-green-500/50 transition-all duration-300">
+                  <div className="group flex flex-col sm:flex-row items-start gap-3 sm:gap-4 p-4 rounded-xl bg-gradient-to-r from-green-900/20 to-green-800/20 border border-green-700/30 hover:border-green-500/50 transition-all duration-300">
                     <div className="w-14 h-14 bg-green-600 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
                       <MapPin className="h-7 w-7 text-white" />
                     </div>
-                    <div>
+                    <div className="flex-1">
                       <h4 className="font-bold text-white text-lg mb-1">Global Reach</h4>
-                      <p className="text-green-300 font-semibold">Budapest + EU Travel</p>
+                      <p className="text-green-300 font-semibold text-base">Budapest + EU Travel</p>
                       <p className="text-sm text-gray-400 mt-1">Available for in-person meetings, speaking events, and remote consultations</p>
                     </div>
                   </div>
@@ -759,17 +760,17 @@ export default function Home() {
               
               <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-2xl border border-gray-700">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
                     <Zap className="h-6 w-6 text-white" />
                   </div>
                   <h4 className="text-xl font-bold text-white">Fast Response Guarantee</h4>
                 </div>
-                <p className="text-gray-300 mb-4">
+                <p className="text-base text-gray-300 mb-4">
                   As someone who secured 73M HUF investment, I understand the value of time. 
                   Every serious business inquiry gets a personal response within 24 hours.
                 </p>
-                <div className="flex items-center gap-2 text-blue-400 text-sm font-semibold">
-                  <Check className="h-4 w-4" />
+                <div className="flex items-start gap-2 text-blue-400 text-sm font-semibold">
+                  <Check className="h-4 w-4 flex-shrink-0 mt-0.5" />
                   <span>For urgent matters, mark your message "URGENT" for priority handling</span>
                 </div>
               </div>
@@ -778,29 +779,29 @@ export default function Home() {
             <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-2xl border border-gray-700">
               <div className="mb-6">
                 <h3 className="text-2xl font-bold text-white mb-2">Start Your Success Story</h3>
-                <p className="text-gray-300">Fill out the form below and let's discuss how to turn your vision into reality.</p>
+                <p className="text-base text-gray-300">Fill out the form below and let's discuss how to turn your vision into reality.</p>
               </div>
               <ContactForm />
             </div>
           </div>
           
-          <div className="text-center mt-20">
-            <div className="inline-flex flex-col sm:flex-row items-center gap-6 sm:gap-12 bg-gray-900/50 backdrop-blur border border-gray-700 rounded-2xl p-6 sm:p-8">
+          <div className="text-center mt-16 sm:mt-20">
+            <div className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-8 lg:gap-12 bg-gray-900/50 backdrop-blur border border-gray-700 rounded-2xl p-4 sm:p-6 lg:p-8">
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-white mb-2">73M HUF</div>
-                <div className="text-gray-400">Investment Secured</div>
+                <div className="text-2xl lg:text-3xl font-bold text-white mb-2">73M HUF</div>
+                <div className="text-gray-400 text-sm">Investment Secured</div>
                 <div className="text-blue-400 text-sm">First Hungarian University VC</div>
               </div>
-              <div className="w-full h-px sm:w-px sm:h-16 bg-gray-600"></div>
+              <div className="w-full h-px sm:w-px sm:h-12 lg:h-16 bg-gray-600"></div>
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-white mb-2">Portfolio.hu</div>
-                <div className="text-gray-400">Media Coverage</div>
+                <div className="text-2xl lg:text-3xl font-bold text-white mb-2">Portfolio.hu</div>
+                <div className="text-gray-400 text-sm">Media Coverage</div>
                 <div className="text-purple-400 text-sm">Major Hungarian Business Press</div>
               </div>
-              <div className="w-full h-px sm:w-px sm:h-16 bg-gray-600"></div>
+              <div className="w-full h-px sm:w-px sm:h-12 lg:h-16 bg-gray-600"></div>
               <div className="text-center">
-                <div className="text-2xl sm:text-3xl font-bold text-white mb-2">Top Startup</div>
-                <div className="text-gray-400">Growth Magazine</div>
+                <div className="text-2xl lg:text-3xl font-bold text-white mb-2">Top Startup</div>
+                <div className="text-gray-400 text-sm">Growth Magazine</div>
                 <div className="text-green-400 text-sm">Award-Winning Track Record</div>
               </div>
             </div>

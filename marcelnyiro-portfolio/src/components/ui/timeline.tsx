@@ -40,7 +40,7 @@ const timelineVariants = cva("relative flex flex-col", {
 const timelineItemVariants = cva("relative flex gap-3 pb-2", {
   variants: {
     orientation: {
-      vertical: "flex-row",
+      vertical: "flex-row sm:gap-3 gap-2",
       horizontal: "flex-col min-w-64 shrink-0",
     },
   },
@@ -52,7 +52,7 @@ const timelineItemVariants = cva("relative flex gap-3 pb-2", {
 const timelineConnectorVariants = cva("bg-border", {
   variants: {
     orientation: {
-      vertical: "absolute left-3 top-9 h-full w-px",
+      vertical: "absolute left-3 top-9 h-full w-px hidden sm:block",
       horizontal: "absolute top-3 left-8 w-full h-px",
     },
     status: {
@@ -148,12 +148,16 @@ export function Timeline({
       className={cn(
         timelineVariants({ variant, orientation }),
         orientation === "horizontal" ? "pb-4" : "",
+        orientation === "vertical" ? "pl-2 sm:pl-0" : "",
       )}
     >
       {items.map((item, index) => (
         <div
           key={item.id}
-          className={cn(timelineItemVariants({ orientation }))}
+          className={cn(
+            timelineItemVariants({ orientation }),
+            "pb-6 sm:pb-2"
+          )}
         >
           {/* Connector Line */}
           {showConnectors && index < items.length - 1 && (
@@ -175,7 +179,7 @@ export function Timeline({
           </div>
 
           {/* Content */}
-          <div className="flex min-w-0 flex-1 flex-col gap-2">
+          <div className="flex min-w-0 flex-1 flex-col gap-2 ml-2 sm:ml-0">
             {/* Timestamp - Top */}
             {showTimestamps &&
               timestampPosition === "top" &&

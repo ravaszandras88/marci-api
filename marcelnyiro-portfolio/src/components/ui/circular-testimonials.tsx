@@ -36,10 +36,18 @@ interface CircularTestimonialsProps {
 }
 
 function calculateGap(width: number) {
+  const mobileWidth = 640;
+  const tabletWidth = 768;
   const minWidth = 1024;
   const maxWidth = 1456;
+  const mobileGap = 30;
+  const tabletGap = 45;
   const minGap = 60;
   const maxGap = 86;
+  
+  // Mobile and small screens
+  if (width <= mobileWidth) return mobileGap;
+  if (width <= tabletWidth) return tabletGap;
   if (width <= minWidth) return minGap;
   if (width >= maxWidth)
     return Math.max(minGap, maxGap + 0.06018 * (width - maxWidth));
@@ -68,6 +76,7 @@ export const CircularTestimonials = ({
   const [hoverPrev, setHoverPrev] = useState(false);
   const [hoverNext, setHoverNext] = useState(false);
   const [containerWidth, setContainerWidth] = useState(1200);
+  const [isMobile, setIsMobile] = useState(false);
 
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const autoplayIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -78,12 +87,13 @@ export const CircularTestimonials = ({
     [activeIndex, testimonials]
   );
 
-  // Responsive gap calculation
+  // Responsive gap calculation and mobile detection
   useEffect(() => {
     function handleResize() {
       if (imageContainerRef.current) {
         setContainerWidth(imageContainerRef.current.offsetWidth);
       }
+      setIsMobile(window.innerWidth < 640);
     }
     handleResize();
     window.addEventListener("resize", handleResize);
@@ -254,9 +264,11 @@ export const CircularTestimonials = ({
               }}
               onMouseEnter={() => setHoverPrev(true)}
               onMouseLeave={() => setHoverPrev(false)}
+              onTouchStart={() => setHoverPrev(true)}
+              onTouchEnd={() => setHoverPrev(false)}
               aria-label="Previous testimonial"
             >
-              <FaArrowLeft size={28} color={colorArrowFg} />
+              <FaArrowLeft size={isMobile ? 20 : 28} color={colorArrowFg} />
             </button>
             <button
               className="arrow-button next-button"
@@ -266,9 +278,11 @@ export const CircularTestimonials = ({
               }}
               onMouseEnter={() => setHoverNext(true)}
               onMouseLeave={() => setHoverNext(false)}
+              onTouchStart={() => setHoverNext(true)}
+              onTouchEnd={() => setHoverNext(false)}
               aria-label="Next testimonial"
             >
-              <FaArrowRight size={28} color={colorArrowFg} />
+              <FaArrowRight size={isMobile ? 20 : 28} color={colorArrowFg} />
             </button>
           </div>
         </div>
@@ -277,16 +291,16 @@ export const CircularTestimonials = ({
         .testimonial-container {
           width: 100%;
           max-width: 56rem;
-          padding: 2rem;
+          padding: 1rem;
         }
         .testimonial-grid {
           display: grid;
-          gap: 5rem;
+          gap: 2rem;
         }
         .image-container {
           position: relative;
           width: 100%;
-          height: 24rem;
+          height: 16rem;
           perspective: 1000px;
         }
         .testimonial-image {
@@ -294,49 +308,114 @@ export const CircularTestimonials = ({
           width: 100%;
           height: 100%;
           object-fit: cover;
-          border-radius: 1.5rem;
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+          border-radius: 1rem;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
         .testimonial-content {
           display: flex;
           flex-direction: column;
           justify-content: space-between;
+          padding: 0 0.5rem;
         }
         .name {
           font-weight: bold;
           margin-bottom: 0.25rem;
+          font-size: 1.25rem;
         }
         .designation {
-          margin-bottom: 2rem;
+          margin-bottom: 1.5rem;
+          font-size: 0.875rem;
         }
         .quote {
-          line-height: 1.75;
+          line-height: 1.6;
+          font-size: 1rem;
         }
         .arrow-buttons {
           display: flex;
-          gap: 1.5rem;
-          padding-top: 3rem;
+          gap: 1rem;
+          padding-top: 2rem;
+          justify-content: center;
         }
         .arrow-button {
-          width: 2.7rem;
-          height: 2.7rem;
+          width: 3rem;
+          height: 3rem;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: background-color 0.3s;
+          transition: all 0.3s ease;
           border: none;
+          touch-action: manipulation;
+          -webkit-tap-highlight-color: transparent;
+        }
+        .arrow-button:active {
+          transform: scale(0.95);
         }
         .word {
           display: inline-block;
         }
+        
+        @media (min-width: 480px) {
+          .testimonial-container {
+            padding: 1.5rem;
+          }
+          .testimonial-grid {
+            gap: 3rem;
+          }
+          .image-container {
+            height: 20rem;
+          }
+          .arrow-buttons {
+            gap: 1.25rem;
+          }
+        }
+        
+        @media (min-width: 640px) {
+          .testimonial-container {
+            padding: 2rem;
+          }
+          .testimonial-grid {
+            gap: 4rem;
+          }
+          .image-container {
+            height: 22rem;
+          }
+          .name {
+            font-size: 1.375rem;
+          }
+          .designation {
+            font-size: 0.925rem;
+          }
+          .quote {
+            font-size: 1.125rem;
+          }
+          .arrow-buttons {
+            gap: 1.5rem;
+          }
+          .arrow-button {
+            width: 2.7rem;
+            height: 2.7rem;
+          }
+        }
+        
         @media (min-width: 768px) {
+          .testimonial-container {
+            padding: 2rem;
+          }
           .testimonial-grid {
             grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+          }
+          .image-container {
+            height: 24rem;
+          }
+          .testimonial-content {
+            padding: 0;
           }
           .arrow-buttons {
             padding-top: 0;
+            justify-content: flex-start;
           }
         }
       `}</style>

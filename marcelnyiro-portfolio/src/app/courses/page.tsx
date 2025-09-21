@@ -89,63 +89,63 @@ const CoursesLanding = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-20">
+    <div className="max-w-6xl mx-auto px-3 sm:px-4 md:px-6 py-16 sm:py-20">
       <motion.div 
-        className="text-center mb-16"
+        className="text-center mb-12 sm:mb-16"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 px-2">
           Access Your Learning Dashboard
         </h1>
-        <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-8">
+        <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-3xl mx-auto mb-6 sm:mb-8 px-2">
           Your courses have been moved to a dedicated learning platform. 
           Continue your AI entrepreneurship journey with enhanced features and better experience.
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-2">
           <Button 
             onClick={handleStartLearning}
-            className="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
+            className="inline-flex items-center justify-center px-6 sm:px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium min-h-[48px] touch-manipulation w-full sm:w-auto"
           >
             {userPremium ? 'Go to Learning Platform' : 'Subscribe to Access'}
-            <ExternalLink className="ml-2 h-5 w-5" />
+            <ExternalLink className="ml-2 h-4 w-4 sm:h-5 sm:w-5" />
           </Button>
         </div>
         </motion.div>
 
       <motion.div 
-        className="text-center mb-16"
+        className="text-center mb-12 sm:mb-16"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.2 }}
       >
-        <h2 className="text-2xl font-bold text-white mb-8">What You'll Get in the Learning Platform</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <GraduationCap className="h-12 w-12 text-blue-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-white mb-2">Enhanced Video Player</h3>
-            <p className="text-gray-400">Professional video player with progress tracking, speed control, and note-taking capabilities.</p>
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-6 sm:mb-8 px-2">What You'll Get in the Learning Platform</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6 hover:border-blue-500/50 transition-colors">
+            <GraduationCap className="h-10 w-10 sm:h-12 sm:w-12 text-blue-400 mx-auto mb-3 sm:mb-4" />
+            <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Enhanced Video Player</h3>
+            <p className="text-sm sm:text-base text-gray-400">Professional video player with progress tracking, speed control, and note-taking capabilities.</p>
           </div>
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <Star className="h-12 w-12 text-yellow-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-white mb-2">Better Progress Tracking</h3>
-            <p className="text-gray-400">Detailed analytics on your learning progress, completion rates, and achievements.</p>
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6 hover:border-yellow-500/50 transition-colors">
+            <Star className="h-10 w-10 sm:h-12 sm:w-12 text-yellow-400 mx-auto mb-3 sm:mb-4" />
+            <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Better Progress Tracking</h3>
+            <p className="text-sm sm:text-base text-gray-400">Detailed analytics on your learning progress, completion rates, and achievements.</p>
           </div>
-          <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
-            <Building2 className="h-12 w-12 text-green-400 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-white mb-2">Dedicated Learning Environment</h3>
-            <p className="text-gray-400">Distraction-free environment focused solely on your learning experience.</p>
+          <div className="bg-gray-900 border border-gray-800 rounded-xl p-4 sm:p-6 hover:border-green-500/50 transition-colors sm:col-span-2 lg:col-span-1">
+            <Building2 className="h-10 w-10 sm:h-12 sm:w-12 text-green-400 mx-auto mb-3 sm:mb-4" />
+            <h3 className="text-base sm:text-lg font-semibold text-white mb-2">Dedicated Learning Environment</h3>
+            <p className="text-sm sm:text-base text-gray-400">Distraction-free environment focused solely on your learning experience.</p>
           </div>
         </div>
         </motion.div>
 
       {!userPremium && (
         <>
-          <h2 className="text-3xl font-bold text-white mb-8 text-center">Course Plan Available</h2>
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-6 sm:mb-8 text-center px-2">Course Plan Available</h2>
           
-          <div className="flex justify-center mb-16">
+          <div className="flex justify-center mb-12 sm:mb-16 px-2">
             {/* Pro Tier - Only Option */}
             <motion.div
               initial={{ opacity: 0, y: 50 }}
@@ -206,7 +206,7 @@ const CoursesLanding = () => {
                 </List>
                 <Button 
                   onClick={handleStartLearning}
-                  className="w-full mt-6 bg-blue-600 hover:bg-blue-700"
+                  className="w-full mt-6 bg-blue-600 hover:bg-blue-700 min-h-[48px] touch-manipulation font-medium"
                 >
                   {userPremium ? 'Access Learning Platform' : 'Start Learning'}
                 </Button>
@@ -217,14 +217,14 @@ const CoursesLanding = () => {
         </>
       )}
       
-    <div className="text-center mt-12">
-      <p className="text-gray-400 text-sm mb-4">
+    <div className="text-center mt-8 sm:mt-12 px-2">
+      <p className="text-gray-400 text-xs sm:text-sm mb-3 sm:mb-4">
         Learn from real success: 73M HUF OUVC investment • Portfolio.hu featured • 300+ users
       </p>
-      <div className="flex flex-wrap justify-center gap-4 text-xs text-gray-400">
-        <span>✓ 30-day money-back guarantee</span>
-        <span>✓ Cancel anytime</span>
-        <span>✓ Instant access</span>
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-4 text-xs text-gray-400">
+        <span className="bg-gray-800/50 px-2 py-1 rounded">✓ 30-day money-back guarantee</span>
+        <span className="bg-gray-800/50 px-2 py-1 rounded">✓ Cancel anytime</span>
+        <span className="bg-gray-800/50 px-2 py-1 rounded">✓ Instant access</span>
       </div>
     </div>
 

@@ -284,18 +284,28 @@ export default function InfiniteHero() {
 		{ scope: rootRef },
 	);
 
-	// Intersection Observer to control WebGL rendering + mobile detection
+	// Enhanced mobile detection and performance optimization
 	useEffect(() => {
-		const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+		const checkMobileDevice = () => {
+			const userAgent = navigator.userAgent.toLowerCase();
+			const isMobileUA = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+			const isSmallScreen = window.innerWidth < 768;
+			const isLowPerformance = navigator.hardwareConcurrency ? navigator.hardwareConcurrency < 4 : true;
+			const isSlowConnection = navigator.connection ? navigator.connection.effectiveType === 'slow-2g' || navigator.connection.effectiveType === '2g' : false;
+			
+			return isMobileUA || isSmallScreen || isLowPerformance || isSlowConnection;
+		};
+
+		const isMobile = checkMobileDevice();
 		
 		const observer = new IntersectionObserver(
 			([entry]) => {
-				// On mobile, disable 3D rendering for better performance
+				// Enhanced performance control: disable 3D on mobile/low-performance devices
 				setIsVisible(entry.isIntersecting && !isMobile);
 			},
 			{
 				threshold: 0.1,
-				rootMargin: "100px 0px", // Start rendering 100px before entering viewport
+				rootMargin: "50px 0px", // Reduced margin for better mobile performance
 			}
 		);
 
@@ -303,10 +313,21 @@ export default function InfiniteHero() {
 			observer.observe(rootRef.current);
 		}
 
+		// Handle resize for responsive behavior
+		const handleResize = () => {
+			const isNowMobile = checkMobileDevice();
+			if (isNowMobile !== isMobile) {
+				setIsVisible(false); // Disable 3D on mobile resize
+			}
+		};
+
+		window.addEventListener('resize', handleResize);
+
 		return () => {
 			if (rootRef.current) {
 				observer.unobserve(rootRef.current);
 			}
+			window.removeEventListener('resize', handleResize);
 		};
 	}, []);
 
@@ -319,24 +340,24 @@ export default function InfiniteHero() {
 				<ShaderBackground className="h-full w-full" shouldRender={isVisible} />
 			</div>
 
-			{/* Mobile fallback gradient background */}
+			{/* Enhanced mobile fallback with animated gradient */}
 			{!isVisible && (
-				<div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-black to-purple-600/20" />
+				<div className="absolute inset-0 bg-gradient-to-br from-blue-600/30 via-black via-40% to-purple-600/20 animate-pulse" />
 			)}
 
 			<div className="pointer-events-none absolute inset-0 [background:radial-gradient(120%_80%_at_50%_50%,_transparent_40%,_black_100%)]" />
 
-			<div className="relative z-10 flex h-svh w-full items-center justify-center px-6">
-				<div className="text-center">
+			<div className="relative z-10 flex h-svh w-full items-center justify-center px-4 sm:px-6 lg:px-8">
+				<div className="text-center max-w-4xl w-full">
 					<h1
 						ref={h1Ref}
-						className="mx-auto max-w-2xl lg:max-w-4xl text-[clamp(1.75rem,5vw,4rem)] font-extralight leading-[0.95] tracking-tight px-4"
+						className="mx-auto text-[clamp(1.5rem,4.5vw,4rem)] font-extralight leading-[0.95] tracking-tight px-2 sm:px-4"
 					>
 						The road dissolves in light, the horizon remains unseen.
 					</h1>
 					<p
 						ref={pRef}
-						className="mx-auto mt-4 max-w-2xl md:text-balance text-sm/6 md:text-base/7 font-light tracking-tight text-white/70 px-4"
+						className="mx-auto mt-4 sm:mt-6 max-w-2xl text-sm/6 sm:text-base/7 md:text-lg/8 font-light tracking-tight text-white/70 px-2 sm:px-4"
 					>
 						Minimal structures fade into a vast horizon where presence and
 						absence merge. A quiet tension invites the eye to wander without
@@ -345,18 +366,18 @@ export default function InfiniteHero() {
 
 					<div
 						ref={ctaRef}
-						className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 px-4"
+						className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-2 sm:px-4"
 					>
 						<button
 							type="button"
-							className="group relative overflow-hidden border border-white/30 bg-gradient-to-r from-white/20 to-white/10 px-4 py-2 text-sm rounded-lg font-medium tracking-wide text-white backdrop-blur-sm transition-[border-color,background-color,box-shadow] duration-500 hover:border-white/50 hover:bg-white/20 hover:shadow-lg hover:shadow-white/10 cursor-pointer"
+							className="group relative overflow-hidden border border-white/30 bg-gradient-to-r from-white/20 to-white/10 px-6 py-3 sm:px-4 sm:py-2 text-sm sm:text-sm rounded-lg font-medium tracking-wide text-white backdrop-blur-sm transition-[border-color,background-color,box-shadow] duration-500 hover:border-white/50 hover:bg-white/20 hover:shadow-lg hover:shadow-white/10 cursor-pointer min-h-[48px] min-w-[120px] touch-manipulation"
 						>
 							Learn more
 						</button>
 
 						<button
 							type="button"
-							className="group relative px-4 py-2 text-sm font-medium tracking-wide text-white/90 transition-[filter,color] duration-500 hover:drop-shadow-[0_0_6px_rgba(255,255,255,0.6)] hover:text-white cursor-pointer"
+							className="group relative px-6 py-3 sm:px-4 sm:py-2 text-sm sm:text-sm font-medium tracking-wide text-white/90 transition-[filter,color] duration-500 hover:drop-shadow-[0_0_6px_rgba(255,255,255,0.6)] hover:text-white cursor-pointer min-h-[48px] min-w-[120px] touch-manipulation"
 						>
 							View portfolio
 						</button>
