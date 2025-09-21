@@ -22,6 +22,7 @@ interface UserData {
   name: string;
   email: string;
   created_at?: string;
+  user_premium?: boolean;
 }
 
 interface Course {
@@ -65,6 +66,7 @@ const LearnedDashboard = ({ onUserLoad }: { onUserLoad?: (user: UserData | null)
 
   // Fetch courses from database - public for all authenticated users
   const fetchCourses = async () => {
+    console.log('fetchCourses called - fetching fresh course data...');
     try {
       const token = localStorage.getItem('authToken');
       const headers: Record<string, string> = {
@@ -87,7 +89,12 @@ const LearnedDashboard = ({ onUserLoad }: { onUserLoad?: (user: UserData | null)
       
       if (response.ok) {
         const coursesData = await response.json();
+        console.log('fetchCourses received data:', coursesData);
+        const course72 = coursesData.find((c: Course) => c.id === 'new-course-72');
+        const module509 = course72?.modules?.find((m: Course['modules'][0]) => m.id === 509);
+        console.log('Full Module 509 data:', JSON.stringify(module509, null, 2));
         setCourses(coursesData);
+        console.log('setCourses called with fresh data');
       } else {
         console.error('Failed to fetch courses');
       }
@@ -752,7 +759,7 @@ const LearnedDashboard = ({ onUserLoad }: { onUserLoad?: (user: UserData | null)
             <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
               <BookOpen className="w-10 h-10 text-white animate-pulse" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">Username</h1>
+            <h1 className="text-3xl font-bold text-white mb-2">{user?.name || 'Marcel Nyirő Learning'}</h1>
             <p className="text-gray-400 mb-8">Loading...</p>
           </div>
           <div className="flex justify-center">
@@ -772,7 +779,7 @@ const LearnedDashboard = ({ onUserLoad }: { onUserLoad?: (user: UserData | null)
             <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
               <BookOpen className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">Username</h1>
+            <h1 className="text-3xl font-bold text-white mb-2">Marcel Nyirő Learning</h1>
             <p className="text-gray-400 mb-8">Access Required</p>
           </div>
           <p className="text-gray-400 mb-6">Please sign in to access your courses and continue your AI entrepreneurship journey.</p>
@@ -782,6 +789,41 @@ const LearnedDashboard = ({ onUserLoad }: { onUserLoad?: (user: UserData | null)
           >
             Go to Main Site
           </a>
+        </div>
+      </div>
+    );
+  }
+
+  // Show premium required if user is logged in but not premium
+  if (user && user.user_premium === false) {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto px-4">
+          <div className="mb-8">
+            <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center">
+              <BookOpen className="w-10 h-10 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-white mb-2">Premium Access Required</h1>
+            <p className="text-gray-400 mb-8">Welcome, {user.name}!</p>
+          </div>
+          <p className="text-gray-400 mb-6">
+            You need to purchase the course to access the learning platform. 
+            Get unlimited access to Marcel's AI entrepreneurship content for just 4000 HUF/month.
+          </p>
+          <div className="space-y-4">
+            <a 
+              href={`${process.env.NODE_ENV === 'production' ? 'https://marcelnyiro.com' : 'http://localhost:3000'}/courses`}
+              className="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium w-full justify-center"
+            >
+              Purchase Course (4000 HUF/month)
+            </a>
+            <button 
+              onClick={handleLogout}
+              className="inline-flex items-center px-8 py-4 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition-colors font-medium w-full justify-center"
+            >
+              Sign Out
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -805,7 +847,7 @@ const LearnedDashboard = ({ onUserLoad }: { onUserLoad?: (user: UserData | null)
       default:
         // If it's a course ID, show course content, otherwise show dashboard
         if (selectedCourse) {
-          return <CourseContent courseId={selected} courses={courses} setCourses={setCourses} />;
+          return <CourseContent courseId={selected} courses={courses} setCourses={setCourses} onRefresh={fetchCourses} />;
         }
         return <DashboardContent user={user} courses={courses} setSelected={setSelected} onRefresh={fetchCourses} />;
     }

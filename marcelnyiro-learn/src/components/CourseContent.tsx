@@ -47,12 +47,14 @@ interface CourseContentProps {
   courseId: string;
   courses: Course[];
   setCourses: (courses: Course[]) => void;
+  onRefresh?: () => Promise<void>;
 }
 
 export const CourseContent: React.FC<CourseContentProps> = ({
   courseId,
   courses,
-  setCourses
+  setCourses,
+  onRefresh
 }) => {
   const course = courses.find(c => c.id === courseId);
   const [selectedMonth, setSelectedMonth] = useState(() => {
@@ -79,6 +81,15 @@ export const CourseContent: React.FC<CourseContentProps> = ({
   const [localModules, setLocalModules] = useState(course?.modules || []);
   const { updateCourseField, updateModuleField, getChangesForCourse } = useCourseChanges();
   const { isAdmin, isEditMode } = useAdmin();
+  
+  // Update localModules when course data changes (e.g., after save)
+  useEffect(() => {
+    if (course?.modules) {
+      console.log('CourseContent: Updating localModules with fresh course data');
+      console.log('Fresh course.modules:', course.modules);
+      setLocalModules(course.modules);
+    }
+  }, [course?.modules]);
   
   // Video upload states
   const [showVideoUpload, setShowVideoUpload] = useState(false);
@@ -199,6 +210,11 @@ export const CourseContent: React.FC<CourseContentProps> = ({
         if (courseIndex !== -1) {
           allCourses[courseIndex] = updatedCourse;
           setCourses(allCourses);
+        }
+        
+        // Trigger a refresh to get the latest data from the database
+        if (onRefresh) {
+          await onRefresh();
         }
       }
     } catch (error) {
@@ -513,6 +529,13 @@ export const CourseContent: React.FC<CourseContentProps> = ({
     ...originalCurrentEpisode,
     ...moduleChanges
   } : null;
+  
+  // Debug logging
+  console.log('CourseContent Debug:');
+  console.log('originalCurrentEpisode full object:', JSON.stringify(originalCurrentEpisode, null, 2));
+  console.log('moduleChanges:', moduleChanges);
+  console.log('currentEpisode:', currentEpisode);
+  console.log('currentEpisode.videoUrl:', currentEpisode?.videoUrl);
 
   return (
     <div className="space-y-6">
@@ -762,7 +785,7 @@ export const CourseContent: React.FC<CourseContentProps> = ({
                 </div>
               ) : (
                 <span className="text-sm text-gray-400">
-                  {course.modules.filter(m => m.completed).length} of {course.modules.length} completed
+                  {localModules.filter(m => m.completed).length} of {localModules.length} completed
                 </span>
               )}
             </div>

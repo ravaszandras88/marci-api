@@ -16,15 +16,10 @@ export async function GET(request: NextRequest) {
     if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.substring(7);
       
-      // Get user from token
-      const userResult = await query(
-        `SELECT user_id FROM user_sessions 
-         WHERE token = $1 AND expires_at > NOW()`,
-        [token]
-      );
-      
-      if (userResult.length > 0) {
-        userId = userResult[0].user_id;
+      // Get user from JWT token (same method as completion API)
+      const decoded = verifyJWT(token);
+      if (decoded) {
+        userId = decoded.id;
       }
     }
 
@@ -67,12 +62,43 @@ export async function GET(request: NextRequest) {
          ORDER BY order_index`,
         [course.id]
       );
+      
+      console.log(`Fetched modules for course ${course.id}:`, modulesResult.map(m => ({ id: m.id, title: m.title, video_url: m.video_url })));
+      
+      // Special debug for module 509
+      const module509 = modulesResult.find(m => m.id === 509);
+      if (module509) {
+        console.log('SPECIAL DEBUG - Module 509 raw from DB:', JSON.stringify(module509, null, 2));
+      }
 
       // Fetch user progress if user is logged in
       let progress = 0;
       let userModuleProgress = [];
       
       if (userId) {
+        // Check subscription status first
+        const subscriptionResult = await query(
+          `SELECT 
+            CASE 
+              WHEN subscription_end_date > NOW() THEN true 
+              ELSE false 
+            END as has_access
+           FROM user_subscriptions 
+           WHERE user_id = $1 
+           ORDER BY created_at DESC 
+           LIMIT 1`,
+          [userId]
+        );
+        
+        // Update user_premium field based on subscription
+        const hasAccess = subscriptionResult.length > 0 ? subscriptionResult[0].has_access : false;
+        await query(
+          `UPDATE users 
+           SET user_premium = $2, updated_at = NOW() 
+           WHERE id = $1`,
+          [userId, hasAccess]
+        );
+        
         const progressResult = await query(
           `SELECT progress FROM user_progress 
            WHERE user_id = $1 AND course_id = $2`,
@@ -84,12 +110,14 @@ export async function GET(request: NextRequest) {
         }
 
         // Get module completion status
+        console.log(`Fetching completion for user ${userId}, modules:`, modulesResult.map(m => m.id));
         userModuleProgress = await query(
           `SELECT module_id, completed 
            FROM user_module_progress 
            WHERE user_id = $1 AND module_id = ANY($2::int[])`,
           [userId, modulesResult.map(m => m.id)]
         );
+        console.log(`User module progress for user ${userId}:`, userModuleProgress);
       }
 
       // Map modules with completion status

@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Video,
-  Target,
   ChevronRight,
   BookOpen,
   CheckCircle,
@@ -320,7 +319,101 @@ export const ProgressContent: React.FC<{
 );
 
 // Billing Content
-export const BillingContent: React.FC<{ user: UserData }> = ({ user }) => (
+export const BillingContent: React.FC<{ user: UserData }> = ({ user }) => {
+  const [cancelLoading, setCancelLoading] = useState(false);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [subscriptionInfo, setSubscriptionInfo] = useState<any>(null);
+
+  // Fetch subscription status on component mount
+  useEffect(() => {
+    const fetchSubscriptionStatus = async () => {
+      try {
+        const token = localStorage.getItem('authToken');
+        if (!token) return;
+
+        const response = await fetch(
+          process.env.NODE_ENV === 'production' 
+            ? 'https://api.marcelnyiro.com/api/subscription/status'
+            : 'http://localhost:3002/api/subscription/status',
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setSubscriptionInfo(data.subscription);
+        }
+      } catch (error) {
+        console.error('Error fetching subscription status:', error);
+      }
+    };
+
+    fetchSubscriptionStatus();
+  }, []);
+
+  const handleCancelSubscription = async () => {
+    setCancelLoading(true);
+    setError('');
+    setSuccess('');
+
+    try {
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        throw new Error('No authentication token found');
+      }
+
+      const response = await fetch(
+        process.env.NODE_ENV === 'production' 
+          ? 'https://api.marcelnyiro.com/api/subscription/cancel'
+          : 'http://localhost:3002/api/subscription/cancel',
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess('Subscription cancelled successfully. You will continue to have access until the end of your current billing period.');
+        setShowCancelConfirm(false);
+        
+        // Refresh subscription info
+        const statusResponse = await fetch(
+          process.env.NODE_ENV === 'production' 
+            ? 'https://api.marcelnyiro.com/api/subscription/status'
+            : 'http://localhost:3002/api/subscription/status',
+          {
+            headers: {
+              'Authorization': `Bearer ${token}`,
+            },
+          }
+        );
+        
+        if (statusResponse.ok) {
+          const statusData = await statusResponse.json();
+          setSubscriptionInfo(statusData.subscription);
+        }
+      } else {
+        setError(data.error || 'Failed to cancel subscription');
+      }
+    } catch (error) {
+      console.error('Cancel subscription error:', error);
+      setError('Failed to cancel subscription. Please try again.');
+    } finally {
+      setCancelLoading(false);
+    }
+  };
+
+  return (
   <div className="space-y-8">
     <div>
       <h2 className="text-2xl font-bold text-white mb-6">
@@ -352,9 +445,11 @@ export const BillingContent: React.FC<{ user: UserData }> = ({ user }) => (
             placeholder="Section Title"
           />
         </h3>
-        <span className="px-3 py-1 bg-green-600 text-white text-sm rounded-full">
+        <span className={`px-3 py-1 text-white text-sm rounded-full ${
+          subscriptionInfo?.status === 'cancelled' ? 'bg-orange-600' : 'bg-green-600'
+        }`}>
           <EditableField
-            value="Active"
+            value={subscriptionInfo?.status === 'cancelled' ? 'Cancelled' : 'Active'}
             onChange={() => {}} // Static status
             className="text-white text-sm"
             placeholder="Status"
@@ -363,7 +458,10 @@ export const BillingContent: React.FC<{ user: UserData }> = ({ user }) => (
       </div>
       <p className="text-gray-400 mb-4">
         <EditableField
-          value="Full access to all courses and content"
+          value={subscriptionInfo?.status === 'cancelled' 
+            ? `Access until ${subscriptionInfo?.endDate ? new Date(subscriptionInfo.endDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'end of billing period'}`
+            : "Full access to all courses and content"
+          }
           onChange={() => {}} // Static description
           className="text-gray-400"
           placeholder="Description"
@@ -379,6 +477,11 @@ export const BillingContent: React.FC<{ user: UserData }> = ({ user }) => (
           />
           {user?.created_at ? new Date(user.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Recently joined'}
         </span>
+        {subscriptionInfo?.endDate && (
+          <span>
+            • Subscription ends: {new Date(subscriptionInfo.endDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+          </span>
+        )}
       </div>
     </div>
 
@@ -400,8 +503,88 @@ export const BillingContent: React.FC<{ user: UserData }> = ({ user }) => (
         </div>
       </div>
     </div>
+
+    {/* Subscription Management */}
+    <div className="bg-gray-900 border border-gray-800 rounded-xl p-6">
+      <h3 className="text-lg font-bold text-white mb-4">
+        <EditableField
+          value="Subscription Management"
+          onChange={() => {}} // Static section title
+          className="text-lg font-bold text-white"
+          placeholder="Section Title"
+        />
+      </h3>
+      
+      {error && (
+        <div className="mb-4 p-3 bg-red-900/20 border border-red-500/20 rounded-lg">
+          <p className="text-red-400 text-sm">{error}</p>
+        </div>
+      )}
+
+      {success && (
+        <div className="mb-4 p-3 bg-green-900/20 border border-green-500/20 rounded-lg">
+          <p className="text-green-400 text-sm">{success}</p>
+        </div>
+      )}
+
+      <div className="space-y-4">
+        <div className="flex items-center justify-between p-4 bg-gray-800 rounded-lg">
+          <div>
+            <h4 className="text-white font-medium">Pro Plan</h4>
+            <p className="text-gray-400 text-sm">4,000 HUF per month</p>
+            <p className="text-gray-400 text-xs">Full access to all courses and content</p>
+          </div>
+          <div className="text-right">
+            {subscriptionInfo?.status === 'cancelled' ? (
+              <div className="text-orange-400 text-sm">
+                <p>Subscription cancelled</p>
+                <p className="text-xs text-gray-500">Access until {subscriptionInfo?.endDate ? new Date(subscriptionInfo.endDate).toLocaleDateString() : 'end of period'}</p>
+              </div>
+            ) : !showCancelConfirm ? (
+              <Button 
+                onClick={() => setShowCancelConfirm(true)}
+                variant="outline"
+                className="border-red-600 text-red-400 hover:bg-red-600/10"
+              >
+                Cancel Subscription
+              </Button>
+            ) : (
+              <div className="space-y-2">
+                <p className="text-red-400 text-sm mb-2">Are you sure?</p>
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={handleCancelSubscription}
+                    disabled={cancelLoading}
+                    size="sm"
+                    className="bg-red-600 hover:bg-red-700 text-white"
+                  >
+                    {cancelLoading ? 'Cancelling...' : 'Yes, Cancel'}
+                  </Button>
+                  <Button 
+                    onClick={() => setShowCancelConfirm(false)}
+                    disabled={cancelLoading}
+                    variant="outline" 
+                    size="sm"
+                    className="border-gray-600 text-gray-300 hover:bg-gray-800"
+                  >
+                    Keep Plan
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+        
+        <div className="text-xs text-gray-500">
+          <p>• Cancelling your subscription will stop future billing</p>
+          <p>• You'll keep access until the end of your current billing period</p>
+          <p>• You can resubscribe at any time</p>
+        </div>
+      </div>
+    </div>
   </div>
-);
+  );
+};
 
 // Settings Content
 export const SettingsContent: React.FC<{ 

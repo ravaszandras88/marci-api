@@ -194,6 +194,39 @@
     scroll-margin-top: 6rem;
   }
 
+  /* Mobile optimizations */
+  @media (max-width: 768px) {
+    section[id] {
+      scroll-margin-top: 4rem;
+    }
+  }
+
+  /* Improve touch targets on mobile */
+  @media (max-width: 768px) {
+    button, 
+    [role="button"], 
+    input[type="button"], 
+    input[type="submit"], 
+    a {
+      min-height: 44px;
+      touch-action: manipulation;
+    }
+  }
+
+  /* Better text legibility on mobile */
+  @media (max-width: 768px) {
+    body {
+      -webkit-text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  }
+
+  /* Prevent horizontal scroll on mobile */
+  body {
+    overflow-x: hidden;
+  }
+
   /* Dropdown animations */
   @keyframes dropdownOpen {
     from {

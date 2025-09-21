@@ -1,10 +1,12 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from "framer-motion";
 import { Card, Header as CardHeader, Plan, PlanName, Badge, Price, MainPrice, Period, Body, List, ListItem } from "@/components/ui/pricing-card";
 import { Button } from "@/components/ui/button";
 import { AuthRedirectButton } from "@/components/ui/auth-redirect-button";
+import { StripePaymentModal } from "@/components/ui/stripe-payment-modal";
+import { useAuth } from "@/contexts/AuthContext";
 import { 
   CheckCircle, 
   Star, 
@@ -22,6 +24,70 @@ export default function CoursesPage() {
 }
 
 const CoursesLanding = () => {
+  const { user, token, isLoading: authLoading } = useAuth();
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [userPremium, setUserPremium] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Check premium status when user is loaded
+  React.useEffect(() => {
+    const checkPremiumStatus = async () => {
+      if (!user?.email) {
+        setUserPremium(false);
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/check-premium', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: user.email
+          }),
+        });
+
+        const data = await response.json();
+        setUserPremium(data.isPremium || false);
+      } catch (error) {
+        console.error('Error checking premium status:', error);
+        setUserPremium(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (!authLoading) {
+      checkPremiumStatus();
+    }
+  }, [user, authLoading]);
+
+  const handleStartLearning = () => {
+    if (!user) {
+      // User not logged in - they need to sign in first
+      alert('Please sign in first to access courses');
+      return;
+    }
+
+    if (userPremium) {
+      // Redirect to learning platform with auth token
+      const redirectUrl = process.env.NODE_ENV === 'production' ? 'https://learn.marcelnyiro.com' : 'http://localhost:3001';
+      
+      if (token) {
+        const url = new URL(redirectUrl);
+        url.searchParams.set('token', token);
+        window.location.href = url.toString();
+      } else {
+        window.location.href = redirectUrl;
+      }
+    } else {
+      // Show payment modal
+      setIsPaymentModalOpen(true);
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-20">
       <motion.div 
@@ -39,15 +105,13 @@ const CoursesLanding = () => {
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <AuthRedirectButton 
-            redirectUrl={process.env.NODE_ENV === 'production' ? 'https://learn.marcelnyiro.com' : 'http://localhost:3001'}
-            defaultTab="signin"
+          <Button 
+            onClick={handleStartLearning}
+            className="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
           >
-            <Button className="inline-flex items-center px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
-              Go to Learning Platform
-              <ExternalLink className="ml-2 h-5 w-5" />
-            </Button>
-          </AuthRedirectButton>
+            {userPremium ? 'Go to Learning Platform' : 'Subscribe to Access'}
+            <ExternalLink className="ml-2 h-5 w-5" />
+          </Button>
         </div>
         </motion.div>
 
@@ -77,177 +141,81 @@ const CoursesLanding = () => {
         </div>
         </motion.div>
 
-      <h2 className="text-3xl font-bold text-white mb-8 text-center">Course Plans Available</h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-        {/* Starter Tier */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          whileHover={{ y: -5, scale: 1.02 }}
-        >
-          <Card className="max-w-none">
-            <CardHeader>
-              <Plan>
-                <PlanName>
-                  <GraduationCap className="text-black" />
-                  Starter
-                </PlanName>
-              </Plan>
-              <Price>
-                <MainPrice className="text-white">€29</MainPrice>
-                <Period className="text-gray-300">/month</Period>
-              </Price>
-              <div className="text-xs text-gray-400">€299/year (save 15%)</div>
-            </CardHeader>
-            <Body>
-            <List>
-              <ListItem>
-                <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
-                <span className="text-white">AI entrepreneurship course (6 modules)</span>
-              </ListItem>
-              <ListItem>
-                <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
-                <span className="text-white">Monthly live Q&A with Marcel</span>
-              </ListItem>
-              <ListItem>
-                <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
-                <span className="text-white">Course completion certificates</span>
-              </ListItem>
-              <ListItem>
-                <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
-                <span className="text-white">Mobile app access</span>
-              </ListItem>
-              <ListItem>
-                <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
-                <span className="text-white">Basic community access</span>
-              </ListItem>
-            </List>
-            <AuthRedirectButton 
-              redirectUrl={process.env.NODE_ENV === 'production' ? 'https://learn.marcelnyiro.com' : 'http://localhost:3001'}
-              defaultTab="signin"
+      {!userPremium && (
+        <>
+          <h2 className="text-3xl font-bold text-white mb-8 text-center">Course Plan Available</h2>
+          
+          <div className="flex justify-center mb-16">
+            {/* Pro Tier - Only Option */}
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              whileHover={{ y: -5, scale: 1.02 }}
+              className="max-w-md w-full"
             >
-              <Button className="w-full mt-6 bg-blue-600 hover:bg-blue-700">
-                Start Learning
-              </Button>
-            </AuthRedirectButton>
-          </Body>
-        </Card>
-          </motion.div>
-
-        {/* Pro Tier */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          whileHover={{ y: -5, scale: 1.02 }}
-        >
-          <Card className="max-w-none border-2 border-blue-500">
-          <CardHeader>
-            <Plan>
-              <PlanName>
-                <Star className="text-black" />
-                Pro
-              </PlanName>
-              <Badge className="bg-blue-600 text-white border-blue-600">Most Popular</Badge>
-            </Plan>
-            <Price>
-              <MainPrice className="text-white">€49</MainPrice>
-              <Period className="text-gray-300">/month</Period>
-            </Price>
-            <div className="text-xs text-gray-400">€499/year (save 15%)</div>
-          </CardHeader>
-          <Body>
-            <List>
-              <ListItem>
-                <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
-                <span className="text-white">All Starter features</span>
-              </ListItem>
-              <ListItem>
-                <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
-                <span className="text-white">Exclusive Outfino case study series</span>
-              </ListItem>
-              <ListItem>
-                <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
-                <span className="text-white">Real pitch decks & investment materials</span>
-              </ListItem>
-              <ListItem>
-                <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
-                <span className="text-white">Direct messaging with Marcel</span>
-              </ListItem>
-              <ListItem>
-                <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
-                <span className="text-white">VC introduction opportunities</span>
-              </ListItem>
-            </List>
-            <AuthRedirectButton 
-              redirectUrl={process.env.NODE_ENV === 'production' ? 'https://learn.marcelnyiro.com' : 'http://localhost:3001'}
-              defaultTab="signin"
-            >
-              <Button className="w-full mt-6 bg-blue-600 hover:bg-blue-700">
-                Go Pro
-              </Button>
-            </AuthRedirectButton>
-          </Body>
-        </Card>
-          </motion.div>
-
-        {/* Enterprise Tier */}
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          whileHover={{ y: -5, scale: 1.02 }}
-        >
-          <Card className="max-w-none">
-          <CardHeader>
-            <Plan>
-              <PlanName>
-                <Building2 className="text-black" />
-                Enterprise
-              </PlanName>
-              <Badge>Premium</Badge>
-            </Plan>
-            <Price>
-              <MainPrice className="text-white">€199</MainPrice>
-              <Period className="text-gray-300">/month</Period>
-            </Price>
-            <div className="text-xs text-gray-400">€1,999/year (save 17%)</div>
-          </CardHeader>
-          <Body>
-            <List>
-              <ListItem>
-                <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
-                <span className="text-white">All Pro features</span>
-              </ListItem>
-              <ListItem>
-                <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
-                <span className="text-white">Team access (up to 10 users)</span>
-              </ListItem>
-              <ListItem>
-                <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
-                <span className="text-white">Custom workshops & sessions</span>
-              </ListItem>
-              <ListItem>
-                <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
-                <span className="text-white">Quarterly strategy sessions</span>
-              </ListItem>
-            </List>
-            <AuthRedirectButton 
-              defaultTab="signin"
-              onClick={() => {
-                window.location.href = "/#contact";
-              }}
-            >
-              <Button className="w-full mt-6 bg-blue-600 hover:bg-blue-700">
-                Contact Sales
-              </Button>
-            </AuthRedirectButton>
-          </Body>
-        </Card>
-          </motion.div>
-      </div>
+              <Card className="max-w-none border-2 border-blue-500">
+              <CardHeader>
+                <Plan>
+                  <PlanName>
+                    <Star className="text-black" />
+                    Pro
+                  </PlanName>
+                  <Badge className="bg-blue-600 text-white border-blue-600">Only Plan</Badge>
+                </Plan>
+                <Price>
+                  <MainPrice className="text-white">4000 Ft</MainPrice>
+                  <Period className="text-gray-300">/month</Period>
+                </Price>
+                <div className="text-xs text-gray-400">Approximately €10/month</div>
+              </CardHeader>
+              <Body>
+                <List>
+                  <ListItem>
+                    <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
+                    <span className="text-white">AI entrepreneurship course (6 modules)</span>
+                  </ListItem>
+                  <ListItem>
+                    <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
+                    <span className="text-white">Exclusive Outfino case study series</span>
+                  </ListItem>
+                  <ListItem>
+                    <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
+                    <span className="text-white">Real pitch decks & investment materials</span>
+                  </ListItem>
+                  <ListItem>
+                    <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
+                    <span className="text-white">Monthly live Q&A with Marcel</span>
+                  </ListItem>
+                  <ListItem>
+                    <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
+                    <span className="text-white">Direct messaging with Marcel</span>
+                  </ListItem>
+                  <ListItem>
+                    <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
+                    <span className="text-white">VC introduction opportunities</span>
+                  </ListItem>
+                  <ListItem>
+                    <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
+                    <span className="text-white">Course completion certificates</span>
+                  </ListItem>
+                  <ListItem>
+                    <CheckCircle className="h-4 w-4 text-green-400 mt-0.5" />
+                    <span className="text-white">Mobile app access</span>
+                  </ListItem>
+                </List>
+                <Button 
+                  onClick={handleStartLearning}
+                  className="w-full mt-6 bg-blue-600 hover:bg-blue-700"
+                >
+                  {userPremium ? 'Access Learning Platform' : 'Start Learning'}
+                </Button>
+              </Body>
+            </Card>
+              </motion.div>
+          </div>
+        </>
+      )}
       
     <div className="text-center mt-12">
       <p className="text-gray-400 text-sm mb-4">
@@ -259,6 +227,18 @@ const CoursesLanding = () => {
         <span>✓ Instant access</span>
       </div>
     </div>
+
+    {user && (
+      <StripePaymentModal
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+        userEmail={user.email}
+        onSuccess={() => {
+          setIsPaymentModalOpen(false);
+          setUserPremium(true);
+        }}
+      />
+    )}
     </div>
   );
 }

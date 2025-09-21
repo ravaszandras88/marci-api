@@ -40,7 +40,7 @@ export async function PUT(
     }
 
     const { status } = await request.json();
-    const courseId = params.id;
+    const courseId = (await params).id;
 
     // Validate status value
     if (!status || !['active', 'draft'].includes(status)) {

@@ -23,9 +23,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get user details including created_at from database
+    // Get user details including created_at and premium status from database
     const userResult = await query(
-      'SELECT id, name, email, created_at FROM users WHERE id = $1',
+      'SELECT id, name, email, created_at, user_premium FROM users WHERE id = $1',
       [decoded.id]
     );
 
@@ -36,14 +36,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Return user data with created_at
+    // Return user data with created_at and premium status
     return NextResponse.json({
       message: 'Token is valid',
       user: {
         id: userResult[0].id,
         name: userResult[0].name,
         email: userResult[0].email,
-        created_at: userResult[0].created_at
+        created_at: userResult[0].created_at,
+        user_premium: userResult[0].user_premium
       }
     }, { status: 200 });
 

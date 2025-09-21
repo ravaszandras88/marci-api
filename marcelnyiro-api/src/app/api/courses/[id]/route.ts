@@ -36,8 +36,11 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       );
     }
 
-    const courseId = params.id;
+    const courseId = (await params).id;
     const changes = await request.json();
+    
+    console.log('PUT /api/courses/[id] - Course ID:', courseId);
+    console.log('PUT /api/courses/[id] - Changes received:', JSON.stringify(changes, null, 2));
 
     // Update course fields if provided
     if (changes.title || changes.description || changes.duration || changes.level || changes.thumbnail) {
@@ -112,7 +115,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     // Update module fields if provided
     if (changes.modules) {
+      console.log('Processing module changes...');
       for (const [moduleId, moduleChanges] of Object.entries(changes.modules)) {
+        console.log(`Processing module ${moduleId}:`, JSON.stringify(moduleChanges, null, 2));
         const updateFields = [];
         const updateValues = [];
         let paramIndex = 1;
@@ -131,12 +136,22 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
           updateFields.push(`video_count = $${paramIndex++}`);
           updateValues.push(moduleUpdates.videos);
         }
+        if (moduleUpdates.videoUrl !== undefined) {
+          updateFields.push(`video_url = $${paramIndex++}`);
+          updateValues.push(moduleUpdates.videoUrl);
+        }
 
         if (updateFields.length > 0) {
           updateValues.push(parseInt(moduleId));
           const moduleUpdateQuery = `UPDATE course_modules SET ${updateFields.join(', ')} WHERE id = $${paramIndex}`;
           
+          console.log('Executing module update query:', moduleUpdateQuery);
+          console.log('With values:', updateValues);
+          
           await query(moduleUpdateQuery, updateValues);
+          console.log(`Module ${moduleId} updated successfully`);
+        } else {
+          console.log(`No updates needed for module ${moduleId}`);
         }
       }
     }
@@ -231,7 +246,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       );
     }
 
-    const courseId = params.id;
+    const courseId = (await params).id;
 
     // Find course by ID string or mapping
     let dbCourseId = null;

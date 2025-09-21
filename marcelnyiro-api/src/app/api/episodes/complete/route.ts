@@ -26,6 +26,8 @@ export async function POST(request: NextRequest) {
     
     const { courseId, episodeId } = await request.json();
     
+    console.log('Episode completion request - courseId:', courseId, 'episodeId:', episodeId);
+    
     if (!courseId || !episodeId) {
       return NextResponse.json(
         { error: 'Course ID and Episode ID are required' },
@@ -48,15 +50,29 @@ export async function POST(request: NextRequest) {
       }
       dbCourseId = courseResult[0].id;
     } else {
-      // For other courses, try to find by title pattern
-      const courseResult = await query(
-        `SELECT id FROM courses WHERE LOWER(REPLACE(title, ' ', '-')) LIKE $1`,
-        [`%${courseId}%`]
-      );
-      if (courseResult.length === 0) {
-        return NextResponse.json({ error: 'Course not found' }, { status: 404 });
+      // Check if courseId ends with a database ID (format: "title-123")
+      const lastDashIndex = courseId.lastIndexOf('-');
+      const possibleDbId = courseId.substring(lastDashIndex + 1);
+      
+      if (lastDashIndex > 0 && /^\d+$/.test(possibleDbId)) {
+        // Try direct database ID lookup first
+        const directResult = await query('SELECT id FROM courses WHERE id = $1', [parseInt(possibleDbId)]);
+        if (directResult.length > 0) {
+          dbCourseId = directResult[0].id;
+        } else {
+          return NextResponse.json({ error: 'Course not found' }, { status: 404 });
+        }
+      } else {
+        // For other courses, try to find by title pattern
+        const courseResult = await query(
+          `SELECT id FROM courses WHERE LOWER(REPLACE(title, ' ', '-')) LIKE $1`,
+          [`%${courseId}%`]
+        );
+        if (courseResult.length === 0) {
+          return NextResponse.json({ error: 'Course not found' }, { status: 404 });
+        }
+        dbCourseId = courseResult[0].id;
       }
-      dbCourseId = courseResult[0].id;
     }
     
     // Mark the module as completed for this user

@@ -39,7 +39,7 @@ export async function POST(
       );
     }
 
-    const courseId = parseInt(params.id);
+    const courseId = parseInt((await params).id);
     const moduleData = await request.json();
 
     // Get the current highest order_index for this course

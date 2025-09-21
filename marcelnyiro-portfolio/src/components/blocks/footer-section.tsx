@@ -45,7 +45,7 @@ const footerLinks: FooterSection[] = [
 		label: 'Connect',
 		links: [
 			{ title: 'LinkedIn', href: 'https://www.linkedin.com/in/marcelnyiro/', icon: LinkedinIcon },
-			{ title: 'Email', href: 'mailto:marcel@outfino.com' },
+			{ title: 'Email', href: 'mailto:business@marcelnyiro.com' },
 		],
 	},
 ];

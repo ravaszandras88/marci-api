@@ -3,6 +3,7 @@
 import { Timeline, type TimelineItem } from "@/components/ui/timeline";
 import { CircularTestimonials } from "@/components/ui/circular-testimonials";
 import ContactForm from "@/components/ui/form-1";
+import { MentoringPaymentModal } from "@/components/ui/mentoring-payment-modal";
 import { motion } from "framer-motion";
 import { Award, Briefcase, DollarSign, Newspaper, Trophy, Mic, Users, Building2, Check, GraduationCap, Play, Star, Mail, Phone, MapPin, ExternalLink, TrendingUp, Target, Lightbulb, ArrowRight, Globe, Zap, Brain, Rocket, Shield } from "lucide-react";
 import { 
@@ -19,8 +20,11 @@ import {
   ListItem
 } from "@/components/ui/pricing-card";
 import Link from "next/link";
+import { useState } from "react";
 
 export default function Home() {
+  const [isMentoringModalOpen, setIsMentoringModalOpen] = useState(false);
+
   const achievements: TimelineItem[] = [
     {
       id: "1",
@@ -116,7 +120,7 @@ export default function Home() {
           </motion.div>
           
           <motion.h1 
-            className="text-6xl md:text-8xl font-bold text-white mb-6 leading-tight"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold text-white mb-6 leading-tight"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -126,7 +130,7 @@ export default function Home() {
           </motion.h1>
           
           <motion.p 
-            className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8 leading-relaxed"
+            className="text-lg sm:text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto mb-8 leading-relaxed px-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
@@ -151,7 +155,7 @@ export default function Home() {
           </motion.div>
           
           <motion.div 
-            className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
+            className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 max-w-4xl mx-auto px-4"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
@@ -161,32 +165,32 @@ export default function Home() {
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <div className="text-3xl font-bold text-white mb-2">73M</div>
-              <div className="text-gray-400 text-sm">HUF Investment</div>
+              <div className="text-2xl sm:text-3xl font-bold text-white mb-2">73M</div>
+              <div className="text-gray-400 text-xs sm:text-sm">HUF Investment</div>
             </motion.div>
             <motion.div 
               className="text-center"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <div className="text-3xl font-bold text-white mb-2">6+</div>
-              <div className="text-gray-400 text-sm">Years Experience</div>
+              <div className="text-2xl sm:text-3xl font-bold text-white mb-2">6+</div>
+              <div className="text-gray-400 text-xs sm:text-sm">Years Experience</div>
             </motion.div>
             <motion.div 
               className="text-center"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <div className="text-3xl font-bold text-white mb-2">300+</div>
-              <div className="text-gray-400 text-sm">Platform Users</div>
+              <div className="text-2xl sm:text-3xl font-bold text-white mb-2">300+</div>
+              <div className="text-gray-400 text-xs sm:text-sm">Platform Users</div>
             </motion.div>
             <motion.div 
               className="text-center"
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <div className="text-3xl font-bold text-white mb-2">Top</div>
-              <div className="text-gray-400 text-sm">Startup Award</div>
+              <div className="text-2xl sm:text-3xl font-bold text-white mb-2">Top</div>
+              <div className="text-gray-400 text-xs sm:text-sm">Startup Award</div>
             </motion.div>
           </motion.div>
         </div>
@@ -202,7 +206,7 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
               Transforming <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Ideas</span> into Reality
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -211,7 +215,7 @@ export default function Home() {
             </p>
           </motion.div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-20 max-w-5xl mx-auto px-4">
             <motion.div 
               className="group relative bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-2xl border border-gray-700 hover:border-blue-500/50 transition-all duration-300"
               initial={{ opacity: 0, y: 50 }}
@@ -327,7 +331,7 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
               Proven <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Track Record</span>
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -371,12 +375,12 @@ export default function Home() {
                     </p>
                     <div className="grid grid-cols-2 gap-4">
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-white">73M HUF</div>
-                        <div className="text-blue-300 text-sm">Investment</div>
+                        <div className="text-xl sm:text-2xl font-bold text-white">73M HUF</div>
+                        <div className="text-blue-300 text-xs sm:text-sm">Investment</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-white">300+</div>
-                        <div className="text-blue-300 text-sm">Users</div>
+                        <div className="text-xl sm:text-2xl font-bold text-white">300+</div>
+                        <div className="text-blue-300 text-xs sm:text-sm">Users</div>
                       </div>
                     </div>
                   </motion.div>
@@ -503,7 +507,7 @@ export default function Home() {
         
         <div className="relative z-10 max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
               Transform Your <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Vision</span> into Success
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -512,7 +516,7 @@ export default function Home() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto px-4">
             {/* Speaking Engagements */}
             <div className="group relative bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-2xl border border-gray-700 hover:border-blue-500/50 transition-all duration-300 transform hover:-translate-y-2">
               <div className="absolute -top-4 -right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
@@ -564,13 +568,17 @@ export default function Home() {
 
             {/* 1-on-1 Mentoring */}
             <div className="group relative bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-2xl border border-gray-700 hover:border-purple-500/50 transition-all duration-300 transform hover:-translate-y-2">
+              <div className="absolute -top-4 -right-4 bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                One-time
+              </div>
               <div className="flex items-center gap-4 mb-6">
                 <div className="w-16 h-16 bg-purple-600 rounded-2xl flex items-center justify-center">
                   <Users className="h-8 w-8 text-white" />
                 </div>
                 <div>
                   <h3 className="text-2xl font-bold text-white">1-on-1 Mentoring</h3>
-                  <p className="text-purple-400 font-semibold">€200/hour</p>
+                  <p className="text-purple-400 font-semibold">16,000 HUF</p>
+                  <p className="text-gray-400 text-sm">One-time payment</p>
                 </div>
               </div>
               
@@ -602,63 +610,18 @@ export default function Home() {
                 </div>
               </div>
               
-              <Link href="#contact" className="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-semibold transition-colors duration-300">
-                Book Mentoring Session
-              </Link>
+              <button 
+                onClick={() => setIsMentoringModalOpen(true)}
+                className="block w-full text-center bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-xl font-semibold transition-colors duration-300"
+              >
+                Book Now - 16,000 HUF
+              </button>
             </div>
 
-            {/* Strategic Advisory */}
-            <div className="group relative bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-2xl border border-gray-700 hover:border-green-500/50 transition-all duration-300 transform hover:-translate-y-2">
-              <div className="absolute -top-4 -right-4 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                Premium
-              </div>
-              
-              <div className="flex items-center gap-4 mb-6">
-                <div className="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center">
-                  <Building2 className="h-8 w-8 text-white" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-white">Strategic Advisory</h3>
-                  <p className="text-green-400 font-semibold">€300/hour</p>
-                </div>
-              </div>
-              
-              <p className="text-gray-300 mb-6">
-                Comprehensive strategic guidance for established startups ready to scale. 
-                Get enterprise-level advisory from an entrepreneur with proven exit experience.
-              </p>
-              
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Check className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Flexible engagement duration</span>
-                </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Check className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Strategic planning & market analysis</span>
-                </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Check className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Growth optimization & scaling strategies</span>
-                </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Check className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Team building & organizational design</span>
-                </div>
-                <div className="flex items-center gap-3 text-gray-300">
-                  <Check className="h-5 w-5 text-green-400 flex-shrink-0" />
-                  <span>Exit strategy planning & preparation</span>
-                </div>
-              </div>
-              
-              <Link href="#contact" className="block w-full text-center bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold transition-colors duration-300">
-                Engage Advisory Services
-              </Link>
-            </div>
           </div>
           
           <div className="text-center mt-16">
-            <div className="inline-flex items-center gap-8 bg-gray-900/50 backdrop-blur border border-gray-700 rounded-2xl p-6">
+            <div className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-8 bg-gray-900/50 backdrop-blur border border-gray-700 rounded-2xl p-6">
               <div className="text-center">
                 <div className="text-2xl font-bold text-white">73M HUF</div>
                 <div className="text-gray-400 text-sm">Investment Secured</div>
@@ -683,7 +646,7 @@ export default function Home() {
       <section id="testimonials" className="py-20 bg-gradient-to-br from-black to-gray-900">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
               Trusted by <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Industry Leaders</span>
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -710,10 +673,10 @@ export default function Home() {
           </div>
           
           <div className="mt-16 text-center">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-8 max-w-4xl mx-auto px-4">
               <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-2">Portfolio.hu</div>
-                <div className="text-gray-400 text-sm">Featured Coverage</div>
+                <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-white mb-2">Portfolio.hu</div>
+                <div className="text-gray-400 text-xs sm:text-sm">Featured Coverage</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl font-bold text-white mb-2">OUVC</div>
@@ -742,7 +705,7 @@ export default function Home() {
         
         <div className="relative z-10 max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">
               Ready to <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Transform</span> Your Vision?
             </h2>
             <p className="text-xl text-gray-300 max-w-3xl mx-auto">
@@ -751,7 +714,7 @@ export default function Home() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 px-4">
             <div className="space-y-8">
               <div>
                 <h3 className="text-2xl font-bold text-white mb-8">
@@ -765,7 +728,7 @@ export default function Home() {
                     </div>
                     <div>
                       <h4 className="font-bold text-white text-lg mb-1">Direct Email</h4>
-                      <p className="text-blue-300 font-semibold">marcel@outfino.com</p>
+                      <p className="text-blue-300 font-semibold">business@marcelnyiro.com</p>
                       <p className="text-sm text-gray-400 mt-1">Perfect for detailed business inquiries and partnership discussions</p>
                     </div>
                   </div>
@@ -822,21 +785,21 @@ export default function Home() {
           </div>
           
           <div className="text-center mt-20">
-            <div className="inline-flex items-center gap-12 bg-gray-900/50 backdrop-blur border border-gray-700 rounded-2xl p-8">
+            <div className="inline-flex flex-col sm:flex-row items-center gap-6 sm:gap-12 bg-gray-900/50 backdrop-blur border border-gray-700 rounded-2xl p-6 sm:p-8">
               <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-2">73M HUF</div>
+                <div className="text-2xl sm:text-3xl font-bold text-white mb-2">73M HUF</div>
                 <div className="text-gray-400">Investment Secured</div>
                 <div className="text-blue-400 text-sm">First Hungarian University VC</div>
               </div>
-              <div className="w-px h-16 bg-gray-600"></div>
+              <div className="w-full h-px sm:w-px sm:h-16 bg-gray-600"></div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-2">Portfolio.hu</div>
+                <div className="text-2xl sm:text-3xl font-bold text-white mb-2">Portfolio.hu</div>
                 <div className="text-gray-400">Media Coverage</div>
                 <div className="text-purple-400 text-sm">Major Hungarian Business Press</div>
               </div>
-              <div className="w-px h-16 bg-gray-600"></div>
+              <div className="w-full h-px sm:w-px sm:h-16 bg-gray-600"></div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-white mb-2">Top Startup</div>
+                <div className="text-2xl sm:text-3xl font-bold text-white mb-2">Top Startup</div>
                 <div className="text-gray-400">Growth Magazine</div>
                 <div className="text-green-400 text-sm">Award-Winning Track Record</div>
               </div>
@@ -845,6 +808,13 @@ export default function Home() {
         </div>
       </section>
 
+      <MentoringPaymentModal
+        isOpen={isMentoringModalOpen}
+        onClose={() => setIsMentoringModalOpen(false)}
+        onSuccess={() => {
+          setIsMentoringModalOpen(false);
+        }}
+      />
     </div>
   );
 }

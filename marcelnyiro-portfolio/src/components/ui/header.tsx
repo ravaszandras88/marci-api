@@ -161,7 +161,7 @@ function Header1() {
 
     return (
         <header className="w-full z-40 fixed top-0 left-0 bg-black/90 backdrop-blur-md border-b border-gray-800">
-            <div className="container relative mx-auto min-h-20 flex gap-4 flex-row lg:grid lg:grid-cols-3 items-center">
+            <div className="container relative mx-auto min-h-16 sm:min-h-20 flex gap-2 sm:gap-4 flex-row lg:grid lg:grid-cols-3 items-center px-4 sm:px-6 lg:px-8">
                 <div className="justify-start items-center gap-4 lg:flex hidden flex-row">
                     <NavigationMenu className="flex justify-start items-start">
                         <NavigationMenuList className="flex justify-start gap-4 flex-row">
@@ -213,29 +213,29 @@ function Header1() {
                     </NavigationMenu>
                 </div>
                 <div className="flex lg:justify-center">
-                    <p className="font-bold text-xl">
+                    <p className="font-bold text-lg sm:text-xl">
                         Marcel <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Nyirő</span>
                     </p>
                 </div>
-                <div className="flex justify-end w-full gap-4 items-center">
+                <div className="flex justify-end w-full gap-2 sm:gap-4 items-center">
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button variant="ghost" className="hidden md:inline text-gray-300 hover:text-white hover:bg-gray-800">
+                        <Button variant="ghost" className="hidden lg:inline text-gray-300 hover:text-white hover:bg-gray-800 text-sm">
                             <Link href="/#services">Services</Link>
                         </Button>
                     </motion.div>
-                    <div className="border-r border-gray-700 hidden md:inline"></div>
+                    <div className="border-r border-gray-700 hidden lg:inline"></div>
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white">
+                        <Button variant="outline" className="border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white text-sm px-3 sm:px-4 py-2 hidden sm:inline-flex">
                             <Link href="/#contact">Contact</Link>
                         </Button>
                     </motion.div>
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="hidden md:block">
+                        <Button className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 sm:px-4 py-2">
                             <Link href="/courses">Start Learning</Link>
                         </Button>
                     </motion.div>
                     <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                        <Button className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-3 sm:px-4 py-2">
                             <Link href="/#contact">Get Started</Link>
                         </Button>
                     </motion.div>
@@ -246,7 +246,7 @@ function Header1() {
                             ref={buttonRef}
                             variant="ghost" 
                             size="sm"
-                            className={`p-2 text-white hover:bg-gray-800 rounded-full ${user ? 'bg-blue-600/20 border border-blue-500/30' : ''}`}
+                            className={`p-2 text-white hover:bg-gray-800 rounded-full min-h-[40px] min-w-[40px] ${user ? 'bg-blue-600/20 border border-blue-500/30' : ''}`}
                             onClick={() => {
                                 console.log('Button clicked!'); // Simple log
                                 window.console.log('Window console test'); // Direct window console
@@ -262,7 +262,7 @@ function Header1() {
                                 }
                             }}
                         >
-                            <User className="h-5 w-5" />
+                            <User className="h-4 w-4 sm:h-5 sm:w-5" />
                             {user && (
                                 <span className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-black"></span>
                             )}
@@ -367,32 +367,32 @@ function Header1() {
                     </div>
                 </div>
                 <div className="flex w-12 shrink lg:hidden items-end justify-end">
-                    <Button variant="ghost" onClick={() => setOpen(!isOpen)} className="text-gray-300 hover:text-white hover:bg-gray-800">
+                    <Button variant="ghost" onClick={() => setOpen(!isOpen)} className="text-gray-300 hover:text-white hover:bg-gray-800 p-2 min-h-[40px] min-w-[40px]">
                         {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                     </Button>
                     {isOpen && (
-                        <div className="absolute top-20 border-t border-gray-700 flex flex-col w-full right-0 bg-gray-900 shadow-lg py-4 container gap-8">
+                        <div className="absolute top-16 sm:top-20 border-t border-gray-700 flex flex-col w-full right-0 bg-gray-900 shadow-lg py-4 container gap-6 sm:gap-8">
                             {navigationItems.map((item) => (
                                 <div key={item.title}>
                                     <div className="flex flex-col gap-2">
                                         {item.href ? (
                                             <Link
                                                 href={item.href}
-                                                className="flex justify-between items-center text-gray-300 hover:text-white"
+                                                className="flex justify-between items-center text-gray-300 hover:text-white py-2 px-3 rounded-lg hover:bg-gray-800 transition-colors min-h-[48px]"
                                                 onClick={closeDropdown}
                                             >
                                                 <span className="text-lg">{item.title}</span>
                                                 <MoveRight className="w-4 h-4 stroke-1 text-gray-500" />
                                             </Link>
                                         ) : (
-                                            <p className="text-lg text-white">{item.title}</p>
+                                            <p className="text-lg text-white py-2 px-3">{item.title}</p>
                                         )}
                                         {item.items &&
                                             item.items.map((subItem) => (
                                                 <Link
                                                     key={subItem.title}
                                                     href={subItem.href}
-                                                    className="flex justify-between items-center text-gray-400 hover:text-white"
+                                                    className="flex justify-between items-center text-gray-400 hover:text-white py-2 px-3 ml-4 rounded-lg hover:bg-gray-800 transition-colors min-h-[44px]"
                                                     onClick={closeDropdown}
                                                 >
                                                     <span>

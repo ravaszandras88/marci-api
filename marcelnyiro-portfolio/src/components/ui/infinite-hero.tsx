@@ -284,11 +284,14 @@ export default function InfiniteHero() {
 		{ scope: rootRef },
 	);
 
-	// Intersection Observer to control WebGL rendering
+	// Intersection Observer to control WebGL rendering + mobile detection
 	useEffect(() => {
+		const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+		
 		const observer = new IntersectionObserver(
 			([entry]) => {
-				setIsVisible(entry.isIntersecting);
+				// On mobile, disable 3D rendering for better performance
+				setIsVisible(entry.isIntersecting && !isMobile);
 			},
 			{
 				threshold: 0.1,
@@ -316,19 +319,24 @@ export default function InfiniteHero() {
 				<ShaderBackground className="h-full w-full" shouldRender={isVisible} />
 			</div>
 
+			{/* Mobile fallback gradient background */}
+			{!isVisible && (
+				<div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 via-black to-purple-600/20" />
+			)}
+
 			<div className="pointer-events-none absolute inset-0 [background:radial-gradient(120%_80%_at_50%_50%,_transparent_40%,_black_100%)]" />
 
 			<div className="relative z-10 flex h-svh w-full items-center justify-center px-6">
 				<div className="text-center">
 					<h1
 						ref={h1Ref}
-						className="mx-auto max-w-2xl lg:max-w-4xl text-[clamp(2.25rem,6vw,4rem)] font-extralight leading-[0.95] tracking-tight"
+						className="mx-auto max-w-2xl lg:max-w-4xl text-[clamp(1.75rem,5vw,4rem)] font-extralight leading-[0.95] tracking-tight px-4"
 					>
 						The road dissolves in light, the horizon remains unseen.
 					</h1>
 					<p
 						ref={pRef}
-						className="mx-auto mt-4 max-w-2xl md:text-balance text-sm/6 md:text-base/7 font-light tracking-tight text-white/70"
+						className="mx-auto mt-4 max-w-2xl md:text-balance text-sm/6 md:text-base/7 font-light tracking-tight text-white/70 px-4"
 					>
 						Minimal structures fade into a vast horizon where presence and
 						absence merge. A quiet tension invites the eye to wander without
@@ -337,7 +345,7 @@ export default function InfiniteHero() {
 
 					<div
 						ref={ctaRef}
-						className="mt-8 flex flex-row items-center justify-center gap-4"
+						className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 px-4"
 					>
 						<button
 							type="button"
