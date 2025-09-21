@@ -1,42 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Pool } from 'pg';
 
-const pool = new Pool({
-  user: 'marci_user',
-  host: 'localhost',
-  database: 'marci_portfolio_db',
-  password: process.env.DATABASE_PASSWORD,
-  port: 5432,
-});
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json();
-    
-    if (!email) {
-      return NextResponse.json({ error: 'Email is required' }, { status: 400 });
+    const body = await request.json();
+
+    // Forward the request to the API
+    const response = await fetch(`${API_URL}/api/user/check-premium`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to check premium status');
     }
 
-    const client = await pool.connect();
-    
-    try {
-      const result = await client.query(
-        'SELECT user_premium FROM users WHERE email = $1',
-        [email]
-      );
-
-      if (result.rows.length === 0) {
-        return NextResponse.json({ isPremium: false, userExists: false });
-      }
-
-      const user = result.rows[0];
-      return NextResponse.json({ 
-        isPremium: user.user_premium || false,
-        userExists: true 
-      });
-    } finally {
-      client.release();
-    }
+    return NextResponse.json(data);
   } catch (error) {
     console.error('Error checking premium status:', error);
     return NextResponse.json(

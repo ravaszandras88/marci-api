@@ -33,6 +33,7 @@ const VideoPlayerPro: React.FC<VideoPlayerProProps> = ({ src, onVideoComplete })
   const [showControls, setShowControls] = useState<boolean>(true);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
   const [hasCompletedVideo, setHasCompletedVideo] = useState<boolean>(false);
+  const [lastTap, setLastTap] = useState<number>(0);
 
   // Reset completion state when video source changes
   React.useEffect(() => {
@@ -42,6 +43,25 @@ const VideoPlayerPro: React.FC<VideoPlayerProProps> = ({ src, onVideoComplete })
     setIsPlaying(false);
     setIsEnded(false);
   }, [src]);
+
+  // Disable picture-in-picture on mount
+  React.useEffect(() => {
+    if (videoRef.current) {
+      // Force disable PiP
+      (videoRef.current as any).disablePictureInPicture = true;
+      
+      // Also try to prevent it via the API if available
+      if ('pictureInPictureEnabled' in document) {
+        videoRef.current.addEventListener('enterpictureinpicture', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (document.pictureInPictureElement) {
+            document.exitPictureInPicture().catch(() => {});
+          }
+        });
+      }
+    }
+  }, []);
 
   // Play / Pause / Restart
   const togglePlay = () => {
@@ -56,6 +76,23 @@ const VideoPlayerPro: React.FC<VideoPlayerProProps> = ({ src, onVideoComplete })
       videoRef.current.play();
     }
     setIsPlaying(!isPlaying);
+  };
+
+  // Handle double tap for fullscreen on mobile
+  const handleVideoTap = (e: React.MouseEvent) => {
+    const currentTime = Date.now();
+    const tapInterval = currentTime - lastTap;
+    
+    if (tapInterval < 300 && tapInterval > 0) {
+      // Double tap detected - toggle fullscreen
+      e.preventDefault();
+      toggleFullscreen();
+    } else {
+      // Single tap - toggle play/pause
+      togglePlay();
+    }
+    
+    setLastTap(currentTime);
   };
 
   // Update progress and time
@@ -97,15 +134,41 @@ const VideoPlayerPro: React.FC<VideoPlayerProProps> = ({ src, onVideoComplete })
   const toggleFullscreen = () => {
     if (!containerRef.current) return;
 
-    // Must be called inside a user-initiated event
-    if (!document.fullscreenElement) {
-      containerRef.current.requestFullscreen().catch((err) => {
-        console.error("Fullscreen request failed:", err);
-      });
+    // Check for various fullscreen APIs (for cross-browser support)
+    const elem = containerRef.current;
+    const doc = document as any;
+    
+    const requestFS = elem.requestFullscreen 
+    
+    const exitFS = doc.exitFullscreen || 
+                  doc.webkitExitFullscreen || 
+                  doc.mozCancelFullScreen || 
+                  doc.msExitFullscreen;
+    
+    const fullscreenElement = doc.fullscreenElement || 
+                             doc.webkitFullscreenElement || 
+                             doc.mozFullScreenElement || 
+                             doc.msFullscreenElement;
+
+    if (!fullscreenElement) {
+      if (requestFS) {
+        requestFS.call(elem).catch((err: any) => {
+          console.error("Fullscreen request failed:", err);
+          // Fallback for iOS Safari
+          if (videoRef.current && (videoRef.current as any).webkitEnterFullscreen) {
+            (videoRef.current as any).webkitEnterFullscreen();
+          }
+        });
+      } else if (videoRef.current && (videoRef.current as any).webkitEnterFullscreen) {
+        // iOS Safari specific fullscreen for video element
+        (videoRef.current as any).webkitEnterFullscreen();
+      }
     } else {
-      document.exitFullscreen().catch((err) => {
-        console.error("Exit fullscreen failed:", err);
-      });
+      if (exitFS) {
+        exitFS.call(doc).catch((err: any) => {
+          console.error("Exit fullscreen failed:", err);
+        });
+      }
     }
   };
 
@@ -128,11 +191,19 @@ const VideoPlayerPro: React.FC<VideoPlayerProProps> = ({ src, onVideoComplete })
     >
       <video
         ref={videoRef}
-        className="w-full h-full object-contain"
+        className="w-full h-full object-contain select-none"
         src={src}
         onTimeUpdate={handleTimeUpdate}
         onEnded={handleEnded}
-        onClick={togglePlay}
+        onClick={handleVideoTap}
+        onContextMenu={(e) => e.preventDefault()}
+        disablePictureInPicture
+        controls={false}
+        playsInline
+        muted={isMuted}
+        controlsList="nodownload nofullscreen noremoteplayback nopictureinpicture"
+        webkit-playsinline="true"
+        x-webkit-airplay="allow"
       />
 
       {/* Controls */}

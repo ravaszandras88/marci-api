@@ -1,42 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
-import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20',
-});
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3002';
 
 export async function POST(request: NextRequest) {
   try {
-    const { priceId, mode = 'subscription', customerEmail } = await request.json();
+    const body = await request.json();
+    
+    // Add success and cancel URLs for the API
+    const requestBody = {
+      ...body,
+      successUrl: `${request.nextUrl.origin}/courses/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl: `${request.nextUrl.origin}/courses`
+    };
 
-    const session = await stripe.checkout.sessions.create({
-      mode: mode,
-      payment_method_types: ['card'],
-      customer_email: customerEmail,
-      line_items: [
-        {
-          price_data: {
-            currency: 'huf',
-            product_data: {
-              name: 'Marcel Nyirő Pro Course',
-              description: 'AI entrepreneurship course with exclusive Outfino case studies and direct access to Marcel',
-            },
-            unit_amount: 400000, // 4000 HUF in smallest currency unit (fillér)
-            recurring: {
-              interval: 'month',
-            },
-          },
-          quantity: 1,
-        },
-      ],
-      success_url: `${request.nextUrl.origin}/courses/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${request.nextUrl.origin}/courses`,
-      metadata: {
-        userEmail: customerEmail,
+    // Forward the request to the API
+    const response = await fetch(`${API_URL}/api/stripe/create-checkout-session`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
       },
+      body: JSON.stringify(requestBody),
     });
 
-    return NextResponse.json({ sessionId: session.id });
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to create checkout session');
+    }
+
+    return NextResponse.json(data);
   } catch (error) {
     console.error('Error creating checkout session:', error);
     return NextResponse.json(
